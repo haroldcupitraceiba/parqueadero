@@ -50,6 +50,7 @@ pipeline {
         echo "------------>compile & Unit Tests<------------"
         sh 'chmod +x gradlew'
         sh './gradlew --b ./build.gradle test'
+        sh 'mvn clean test'
         sh './gradlew jacocoTestReport'
       }
     }
