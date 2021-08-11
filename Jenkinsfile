@@ -1,7 +1,7 @@
 pipeline {
   //Donde se va a ejecutar el Pipeline
   agent {
-    label 'Slave_Induccion'
+    label 'Slave_Mac'
   }
 
   //Opciones específicas de Pipeline dentro del Pipeline
@@ -12,7 +12,7 @@ pipeline {
 
   //Una sección que define las herramientas “preinstaladas” en Jenkins
   tools {
-    jdk 'JDK8_Centos' //Verisión preinstalada en la Configuración del Master
+    jdk 'JDK8_Mac' //Verisión preinstalada en la Configuración del Master
   }
 /*	Versiones disponibles
       JDK8_Mac
@@ -77,7 +77,7 @@ pipeline {
     }
     success {
       echo 'This will run only if successful'
-      junit 'app/build/test-results/testDebugUnitTest/*.xml'
+      junit 'app/build/test-results/test/*.xml'
     }
     failure {
       echo 'This will run only if failed'
