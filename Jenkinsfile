@@ -50,8 +50,14 @@ pipeline {
         echo "------------>compile & Unit Tests<------------"
         sh 'chmod +x gradlew'
         sh './gradlew --b ./build.gradle test'
-        sh 'mvn clean test'
         sh './gradlew jacocoTestReport'
+
+        script {
+            def testResults = findFiles(glob: 'app/build/reports/jacoco/jacocoTestReport/*.xml')
+            for(xml in testResults) {
+                touch xml.getPath()
+            }
+        }
       }
     }
 
