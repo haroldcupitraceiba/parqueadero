@@ -1,7 +1,7 @@
 pipeline {
   //Donde se va a ejecutar el Pipeline
   agent {
-    label 'Slave_Mac'
+    label 'Slave_Induccion'
   }
 
   //Opciones específicas de Pipeline dentro del Pipeline
@@ -12,7 +12,7 @@ pipeline {
 
   //Una sección que define las herramientas “preinstaladas” en Jenkins
   tools {
-    jdk 'JDK8_Mac' //Verisión preinstalada en la Configuración del Master
+    jdk 'JDK8_Centos' //Verisión preinstalada en la Configuración del Master
   }
 /*	Versiones disponibles
       JDK8_Mac
