@@ -1,3 +1,6 @@
 
 rootProject.name = "Parqueadero"
 include ':app'
+include ':infrastructure'
+include ':infrastructure:dataAccess'
+include ':domain'
