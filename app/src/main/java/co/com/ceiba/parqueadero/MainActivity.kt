@@ -4,30 +4,50 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.lifecycle.ViewModelProvider
+import co.com.ceiba.application.VehicleApplicationService
+import co.com.ceiba.dataaccess.repository.MotorcycleRepositoryImpl
+import co.com.ceiba.dataaccess.repository.VehicleRepositoryImpl
 import co.com.ceiba.domain.model.Car
+import co.com.ceiba.domain.model.Motorcycle
+import co.com.ceiba.domain.service.EntryMotorcycleService
+import co.com.ceiba.domain.service.EntryService
 import co.com.ceiba.parqueadero.viewmodel.VehicleViewModel
+import co.com.ceiba.parqueadero.viewmodel.VehicleViewModelFactory
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
-    private val vehicleViewModel: VehicleViewModel by viewModels()
+    private lateinit var vehicleViewModel: VehicleViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        //vehicleViewModel = ViewModelProvider(this).get(VehicleViewModel::class.java)
+        val motorcycle = Motorcycle("IWB24B",Date(), 300)
+        val motorcycleRepository = MotorcycleRepositoryImpl(this)
+        val motorcycleService = EntryMotorcycleService(motorcycleRepository)
+        val vehicleRepositoryImpl = VehicleRepositoryImpl(this)
+        val entryService = EntryService(motorcycle, vehicleRepositoryImpl, motorcycleService)
+        val vehicleApplicationService = VehicleApplicationService(entryService)
 
-        val car = Car("AZZ039", Date())
-        vehicleViewModel.executeSaveVehicle(car).observe(this, androidx.lifecycle.Observer {
+        vehicleViewModel = ViewModelProvider(this, VehicleViewModelFactory(vehicleApplicationService) ).get(VehicleViewModel::class.java)
+        vehicleViewModel.executeSaveVehicle().observe(this, {
             if (it){
                 Toast.makeText(this,"Vehiculo guardado",Toast.LENGTH_SHORT).show()
             }else{
-                Toast.makeText(this,"No se logro guardar el vehiculo",Toast.LENGTH_SHORT).show()
+                Toast.makeText(this,"No se logro guardar el vehículo",Toast.LENGTH_SHORT).show()
             }
         })
 
+
+
+        vehicleViewModel.executeInfoMessage().observe(this,{
+            it?.let {
+                Toast.makeText(this,it,Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 }

@@ -6,9 +6,9 @@ import co.com.ceiba.domain.exception.InvalidVehicleToAddParkingLotException
 import co.com.ceiba.domain.repository.VehicleRepository
 import javax.inject.Inject
 
-class VehicleService @Inject constructor(@Inject var vehicleRepository: VehicleRepository) {
+class VehicleService constructor(var vehicleRepository: VehicleRepository) {
 
-    fun saveVehicle(vehicle: Vehicle){
+    suspend fun saveVehicle(vehicle: Vehicle){
         if (vehicleRepository.vehicleExists(vehicle.licensePlate) == null){
             vehicleRepository.saveVehicle(vehicle)
         }else{
@@ -16,7 +16,7 @@ class VehicleService @Inject constructor(@Inject var vehicleRepository: VehicleR
         }
     }
 
-    fun deleteVehicle(licensePlate: String){
+    suspend fun deleteVehicle(licensePlate: String){
         if (!licensePlate.isNullOrEmpty()){
             vehicleRepository.deleteVehicle(licensePlate)
         }else{

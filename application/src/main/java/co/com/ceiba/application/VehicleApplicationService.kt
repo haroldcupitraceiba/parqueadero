@@ -1,16 +1,17 @@
 package co.com.ceiba.application
 
 import co.com.ceiba.domain.model.Vehicle
+import co.com.ceiba.domain.service.EntryService
 import co.com.ceiba.domain.service.VehicleService
 import javax.inject.Inject
 
-class VehicleApplicationService @Inject constructor(@Inject var vehicleService: VehicleService){
+class VehicleApplicationService (var entryService: EntryService){
 
-    fun saveVehicle(vehicle: Vehicle) {
-        vehicleService.saveVehicle(vehicle)
+    suspend fun saveVehicle() {
+        entryService.saveVehicle()
     }
 
-    fun deleteVehicle(licensePlate: String){
-        vehicleService.deleteVehicle(licensePlate)
+    suspend fun deleteVehicle(){
+        entryService.deleteVehicle()
     }
 }

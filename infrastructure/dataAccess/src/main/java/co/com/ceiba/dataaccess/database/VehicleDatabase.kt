@@ -14,24 +14,19 @@ abstract class  VehicleDatabase : RoomDatabase() {
     abstract fun vehicleDao(): VehicleDao
 
     companion object{
-        @Volatile
         private var INSTANCE: VehicleDatabase? = null
 
-        @Inject
-        fun getDatabase(@ApplicationContext context: Context): VehicleDatabase{
-            return INSTANCE ?: synchronized(this){
-                val instance = Room.databaseBuilder(
-                    context.applicationContext,
-                    VehicleDatabase::class.java,
-                    "vehicle_database"
+        fun getDatabase(context: Context): VehicleDatabase{
+            if (INSTANCE == null) {
+                //Let's build our RoomDatabase using builder pattern
+                INSTANCE = Room.databaseBuilder(
+                    context, VehicleDatabase::class.java,
+                    "VehiclesDatabase"
                 )
                     .fallbackToDestructiveMigration()
                     .build()
-
-                INSTANCE = instance
-
-                instance
             }
+            return INSTANCE as VehicleDatabase
         }
     }
 }
