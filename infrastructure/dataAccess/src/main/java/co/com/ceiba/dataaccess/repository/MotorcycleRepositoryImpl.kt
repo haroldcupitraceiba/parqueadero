@@ -9,7 +9,7 @@ class MotorcycleRepositoryImpl(context: Context): MotorcycleRepository {
 
     private var vehicleDatabase: VehicleDatabase = VehicleDatabase.getDatabase(context)
 
-    override suspend fun getAmount(): Int {
+    override fun getAmount(): Int {
         return vehicleDatabase.vehicleDao().getVehicleAmountByType(Motorcycle::class.java.name)
     }
 

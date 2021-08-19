@@ -4,7 +4,7 @@ import co.com.ceiba.domain.model.Vehicle
 
 interface VehicleRepository {
     //fun fullAmount(vehicleType: String)
-    suspend fun vehicleExists(licensePlate:String) : Vehicle?
-    suspend fun saveVehicle(vehicle: Vehicle)
-    suspend fun deleteVehicle(licensePlate: String)
+    fun vehicleExists(licensePlate:String) : Vehicle?
+    fun saveVehicle(vehicle: Vehicle)
+    fun deleteVehicle(licensePlate: String)
 }

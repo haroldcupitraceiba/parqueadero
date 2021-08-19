@@ -11,7 +11,7 @@ class VehicleRepositoryImpl(context: Context): VehicleRepository {
 
     private var vehicleDatabase:VehicleDatabase = VehicleDatabase.getDatabase(context)
 
-    override suspend fun vehicleExists(licensePlate: String): Vehicle? {
+    override fun vehicleExists(licensePlate: String): Vehicle? {
         val vehicleEntity = vehicleDatabase.vehicleDao().vehicleExists(licensePlate)
         var vehicle: Vehicle? = null
 
@@ -22,13 +22,13 @@ class VehicleRepositoryImpl(context: Context): VehicleRepository {
         return vehicle
     }
 
-    override suspend fun saveVehicle(vehicle: Vehicle) {
+    override fun saveVehicle(vehicle: Vehicle) {
         vehicleDatabase.vehicleDao().saveVehicle(
             VehicleTranslator().fromDomainToEntity(vehicle)
         )
     }
 
-    override suspend fun deleteVehicle(licensePlate: String) {
+    override fun deleteVehicle(licensePlate: String) {
         vehicleDatabase.vehicleDao().deleteVehicle(licensePlate)
     }
 

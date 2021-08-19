@@ -8,7 +8,7 @@ import javax.inject.Inject
 
 class VehicleService constructor(var vehicleRepository: VehicleRepository) {
 
-    suspend fun saveVehicle(vehicle: Vehicle){
+    fun saveVehicle(vehicle: Vehicle){
         if (vehicleRepository.vehicleExists(vehicle.licensePlate) == null){
             vehicleRepository.saveVehicle(vehicle)
         }else{
@@ -16,7 +16,7 @@ class VehicleService constructor(var vehicleRepository: VehicleRepository) {
         }
     }
 
-    suspend fun deleteVehicle(licensePlate: String){
+    fun deleteVehicle(licensePlate: String){
         if (!licensePlate.isNullOrEmpty()){
             vehicleRepository.deleteVehicle(licensePlate)
         }else{

@@ -34,7 +34,7 @@ class EntryServiceTest {
     }
 
     @Test
-    suspend fun entryService_saveVehicleWithCorrectParameters_successful(){
+    fun entryService_saveVehicleWithCorrectParameters_successful(){
         //Arrange
         val entryDate = Date()
         val licensePlate = "BZZ039"
@@ -48,7 +48,7 @@ class EntryServiceTest {
     }
 
     @Test
-    suspend fun entryService_saveVehicleWithReachedVehicleLimit_exception(){
+    fun entryService_saveVehicleWithReachedVehicleLimit_exception(){
         //Arrange
         val entryDate = Date()
         val licensePlate = "AZZ039"
@@ -68,7 +68,7 @@ class EntryServiceTest {
     }
 
     @Test
-    suspend fun entryService_saveVehicleExists_exception(){
+     fun entryService_saveVehicleExists_exception(){
         //Arrange
         val entryDate = Date()
         val licensePlate = "BZZ039"
@@ -89,7 +89,7 @@ class EntryServiceTest {
     }
 
     @Test
-    suspend fun entryService_saveVehicleOnInvalidDate_exception(){
+     fun entryService_saveVehicleOnInvalidDate_exception(){
         //Arrange
         val entryDate = Date(1629326865000) //Wednesday
         val licensePlate = "AZZ039"
@@ -108,7 +108,7 @@ class EntryServiceTest {
     }
 
     @Test
-    suspend fun entryService_saveVehicleOnSundayDate_successful(){
+     fun entryService_saveVehicleOnSundayDate_successful(){
         //Arrange
         val entryDate = Date(1629067665000) //Sunday
         val licensePlate = "AZZ039"
@@ -123,7 +123,7 @@ class EntryServiceTest {
     }
 
     @Test
-    suspend fun entryService_saveVehicleOnMondayDate_successful(){
+     fun entryService_saveVehicleOnMondayDate_successful(){
         //Arrange
         val entryDate = Date(1629154065000) //Monday
         val licensePlate = "AZZ039"
@@ -138,7 +138,7 @@ class EntryServiceTest {
     }
 
     @Test
-    suspend fun entryService_deleteVehicleWithCorrectParameters_successful(){
+     fun entryService_deleteVehicleWithCorrectParameters_successful(){
         //Arrange
         val entryDate = Date()
         val licensePlate = "BZZ039"

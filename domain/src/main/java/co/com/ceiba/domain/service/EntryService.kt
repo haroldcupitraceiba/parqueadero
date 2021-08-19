@@ -14,7 +14,7 @@ class EntryService(
     private var vehicleRepository: VehicleRepository,
     private val parkingAmount: ParkingAmount
 ) {
-    suspend fun saveVehicle(){
+    fun saveVehicle(){
         if (!parkingAmount.hasReachedVehicleLimit()){
             throw VehicleLimitException()
         }
@@ -31,11 +31,11 @@ class EntryService(
 
     }
 
-    suspend fun searchVehicle(): Vehicle?{
+    fun searchVehicle(): Vehicle?{
         return vehicleRepository.vehicleExists(vehicle.licensePlate)
     }
 
-    suspend fun deleteVehicle(){
+    fun deleteVehicle(){
         vehicleRepository.deleteVehicle(vehicle.licensePlate)
     }
 

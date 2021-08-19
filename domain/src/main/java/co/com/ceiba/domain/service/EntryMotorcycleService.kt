@@ -8,7 +8,7 @@ class EntryMotorcycleService(
 ) : ParkingAmount {
     private val maximumQuantityAvailable = 10
 
-    override suspend fun hasReachedVehicleLimit(): Boolean {
+    override fun hasReachedVehicleLimit(): Boolean {
         return (motorcycleRepository.getAmount() < maximumQuantityAvailable)
     }
 }

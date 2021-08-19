@@ -9,7 +9,7 @@ class EntryCarService (
 ) : ParkingAmount {
     private val maximumQuantityAvailable = 20
 
-    override suspend fun hasReachedVehicleLimit(): Boolean {
+    override fun hasReachedVehicleLimit(): Boolean {
         return (carRepository.getAmount() < maximumQuantityAvailable)
     }
 }

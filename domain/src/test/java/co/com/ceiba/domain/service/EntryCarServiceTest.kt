@@ -7,6 +7,7 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.junit.MockitoJUnitRunner
+import kotlinx.coroutines.*
 
 @RunWith(MockitoJUnitRunner::class)
 class EntryCarServiceTest {
@@ -24,7 +25,7 @@ class EntryCarServiceTest {
     }
 
     @Test
-    suspend fun entryCarService_validReachedVehicleLimitWhenAmountIsGreatThanMaximumValue_successful(){
+    fun entryCarService_validReachedVehicleLimitWhenAmountIsGreatThanMaximumValue_successful(){
         //Arrange
         val entryCarService = EntryCarService(carRepository)
         Mockito.`when`(carRepository.getAmount()).thenReturn(20)
@@ -35,7 +36,7 @@ class EntryCarServiceTest {
     }
 
     @Test
-    suspend fun entryCarService_validReachedVehicleLimitWhenAmountIsLessThanMaximumValue_successful(){
+    fun entryCarService_validReachedVehicleLimitWhenAmountIsLessThanMaximumValue_successful(){
         //Arrange
         val entryCarService = EntryCarService(carRepository)
         Mockito.`when`(carRepository.getAmount()).thenReturn(19)

@@ -9,7 +9,7 @@ class CarRepositoryImpl(context: Context) :CarRepository {
 
     private val vehicleDatabase = VehicleDatabase.getDatabase(context)
 
-    override suspend fun getAmount(): Int {
+    override fun getAmount(): Int {
         return vehicleDatabase.vehicleDao().getVehicleAmountByType(Car::class.java.name)
     }
 }

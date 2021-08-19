@@ -7,15 +7,15 @@ import javax.inject.Inject
 
 class VehicleApplicationService(private var entryService: EntryService){
 
-    suspend fun saveVehicle() {
+    fun saveVehicle() {
         entryService.saveVehicle()
     }
 
-    suspend fun searchVehicle(): Vehicle? {
+    fun searchVehicle(): Vehicle? {
         return entryService.searchVehicle()
     }
 
-    suspend fun deleteVehicle(){
+    fun deleteVehicle(){
         entryService.deleteVehicle()
     }
 }
