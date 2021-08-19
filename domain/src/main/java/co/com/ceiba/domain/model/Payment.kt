@@ -2,6 +2,7 @@ package co.com.ceiba.domain.model
 
 import co.com.ceiba.domain.exception.ParkingValueNotValidException
 import java.util.*
+import kotlin.math.ceil
 
 class Payment(
     private val dateEntry: Date,
@@ -44,7 +45,11 @@ class Payment(
 
     private fun getParkingHours(): Long {
         var diff = Date().time - dateEntry.time
-        return diff / ( 60 * 60 * 1000)
+        var minutesDiff = (diff / (60 * 1000))
+        return if(minutesDiff <= 60)
+                1
+            else
+                (diff / ( 60 * 60 * 1000))
     }
 
 }

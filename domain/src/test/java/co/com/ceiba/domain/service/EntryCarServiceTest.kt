@@ -24,7 +24,7 @@ class EntryCarServiceTest {
     }
 
     @Test
-    fun entryCarService_validReachedVehicleLimitWhenAmountIsGreatThanMaximumValue_successful(){
+    suspend fun entryCarService_validReachedVehicleLimitWhenAmountIsGreatThanMaximumValue_successful(){
         //Arrange
         val entryCarService = EntryCarService(carRepository)
         Mockito.`when`(carRepository.getAmount()).thenReturn(20)
@@ -35,7 +35,7 @@ class EntryCarServiceTest {
     }
 
     @Test
-    fun entryCarService_validReachedVehicleLimitWhenAmountIsLessThanMaximumValue_successful(){
+    suspend fun entryCarService_validReachedVehicleLimitWhenAmountIsLessThanMaximumValue_successful(){
         //Arrange
         val entryCarService = EntryCarService(carRepository)
         Mockito.`when`(carRepository.getAmount()).thenReturn(19)

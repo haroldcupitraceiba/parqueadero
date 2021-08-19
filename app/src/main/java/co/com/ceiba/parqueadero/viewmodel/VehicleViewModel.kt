@@ -50,7 +50,7 @@ class VehicleViewModel(
                 vehicleService.deleteVehicle()
                 vehicleDeleted?.value = true
             }catch (ex: Exception){
-                ex.printStackTrace()
+                message?.value = ex.message
                 vehicleDeleted?.value = false
             }
         }

@@ -34,6 +34,10 @@ class MainActivity : AppCompatActivity() {
         val vehicleApplicationService = VehicleApplicationService(entryService)
 
         vehicleViewModel = ViewModelProvider(this, VehicleViewModelFactory(vehicleApplicationService) ).get(VehicleViewModel::class.java)
+        initObservers()
+    }
+
+    private fun initObservers() {
         vehicleViewModel.executeSaveVehicle().observe(this, {
             if (it){
                 Toast.makeText(this,"Vehiculo guardado",Toast.LENGTH_SHORT).show()
@@ -42,7 +46,13 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-
+        vehicleViewModel.executeDeleteVehicle().observe(this,{
+            if (it){
+                Toast.makeText(this,"Vehiculo eliminado",Toast.LENGTH_SHORT).show()
+            }else{
+                Toast.makeText(this,"No se logro eliminar el vehículo",Toast.LENGTH_SHORT).show()
+            }
+        })
 
         vehicleViewModel.executeInfoMessage().observe(this,{
             it?.let {
