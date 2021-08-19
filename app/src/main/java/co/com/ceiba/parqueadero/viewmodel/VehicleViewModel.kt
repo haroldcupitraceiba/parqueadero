@@ -16,6 +16,7 @@ class VehicleViewModel: ViewModel() {
 
     private var vehicleSaved:MutableLiveData<Boolean>? = null
     private var vehicleDeleted:MutableLiveData<Boolean>? = null
+    private var vehicleSearched:MutableLiveData<Vehicle?>? = null
     private var message:MutableLiveData<String>? = null
     private lateinit var vehicleService: VehicleApplicationService
 
@@ -35,6 +36,13 @@ class VehicleViewModel: ViewModel() {
             vehicleDeleted = MutableLiveData()
         }
         return vehicleDeleted!!
+    }
+
+    fun observeSearchVehicle() : LiveData<Vehicle?>{
+        if (vehicleSearched == null){
+            vehicleSearched = MutableLiveData()
+        }
+        return vehicleSearched!!
     }
 
     fun observeInfoMessage() : LiveData<String> {
@@ -64,6 +72,17 @@ class VehicleViewModel: ViewModel() {
             }catch (ex: Exception){
                 message?.value = ex.message
                 vehicleSaved?.value = false
+            }
+        }
+    }
+
+    fun executeSearchVehicle(){
+        viewModelScope.launch {
+            try {
+                vehicleSearched?.value = vehicleService.searchVehicle()
+            }catch (ex: Exception){
+                message?.value = ex.message
+                vehicleSearched?.value = null
             }
         }
     }

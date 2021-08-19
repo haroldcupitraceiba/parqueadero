@@ -31,6 +31,10 @@ class EntryService(
 
     }
 
+    suspend fun searchVehicle(): Vehicle?{
+        return vehicleRepository.vehicleExists(vehicle.licensePlate)
+    }
+
     suspend fun deleteVehicle(){
         vehicleRepository.deleteVehicle(vehicle.licensePlate)
     }

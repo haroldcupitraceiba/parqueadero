@@ -28,6 +28,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding : ActivityMainBinding
     private lateinit var vehicleViewModel: VehicleViewModel
+    private var vehicleSearched: Vehicle? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,10 +48,63 @@ class MainActivity : AppCompatActivity() {
 
     private fun initExitLayout(){
         binding.exitVehicle.searchButton.setOnClickListener {
+            try {
+                var vehicle:Vehicle
+                var vehicleApplicationService: VehicleApplicationService
+                val licensePlate = binding.exitVehicle.exitLicensePlate.text.toString()
+                val vehicleRepositoryImpl = VehicleRepositoryImpl(this)
 
+                if(binding.exitVehicle.radioCar.isChecked){
+                    vehicle = Car(licensePlate, Date())
+                    val carRepository = CarRepositoryImpl(this)
+                    val carService = EntryCarService(carRepository)
+                    val entryService = EntryService(vehicle, vehicleRepositoryImpl, carService)
+                    vehicleApplicationService = VehicleApplicationService(entryService)
+                }else{
+                    val cylinderCapacity = 100
+                    vehicle = Motorcycle(licensePlate,Date(),cylinderCapacity)
+                    val motorcycleRepository = MotorcycleRepositoryImpl(this)
+                    val motorcycleService = EntryMotorcycleService(motorcycleRepository)
+                    val entryService = EntryService(vehicle, vehicleRepositoryImpl, motorcycleService)
+                    vehicleApplicationService = VehicleApplicationService(entryService)
+                }
+                vehicleViewModel.setVehicleService(vehicleApplicationService)
+                vehicleViewModel.executeSearchVehicle()
+            }catch (ex: Exception){
+                showToastMessage(ex.message.toString())
+                binding.exitVehicle.paymentValue.setText("$----")
+                vehicleSearched = null
+            }
         }
 
+        binding.exitVehicle.exitButton.setOnClickListener {
 
+            if (vehicleSearched == null)
+                return@setOnClickListener
+
+            try {
+                var vehicleApplicationService: VehicleApplicationService
+                val vehicleRepositoryImpl = VehicleRepositoryImpl(this)
+
+                if(binding.exitVehicle.radioCar.isChecked){
+
+                    val carRepository = CarRepositoryImpl(this)
+                    val carService = EntryCarService(carRepository)
+                    val entryService = EntryService(vehicleSearched!!, vehicleRepositoryImpl, carService)
+                    vehicleApplicationService = VehicleApplicationService(entryService)
+                }else{
+                    val motorcycleRepository = MotorcycleRepositoryImpl(this)
+                    val motorcycleService = EntryMotorcycleService(motorcycleRepository)
+                    val entryService = EntryService(vehicleSearched!!, vehicleRepositoryImpl, motorcycleService)
+                    vehicleApplicationService = VehicleApplicationService(entryService)
+                }
+                vehicleViewModel.setVehicleService(vehicleApplicationService)
+                vehicleViewModel.executeDeleteVehicle()
+                showMenuOptions()
+            }catch (ex: Exception){
+                showToastMessage(ex.message.toString())
+            }
+        }
 
         binding.exitVehicle.cancelButton.setOnClickListener {
             showMenuOptions()
@@ -83,6 +137,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 vehicleViewModel.setVehicleService(vehicleApplicationService)
                 vehicleViewModel.executeSaveVehicle()
+                showMenuOptions()
             }catch (ex: Exception){
                 showToastMessage(ex.message.toString())
             }
@@ -188,6 +243,15 @@ class MainActivity : AppCompatActivity() {
         vehicleViewModel.observeInfoMessage().observe(this,{
             it?.let {
                 showToastMessage(it)
+            }
+        })
+
+        vehicleViewModel.observeSearchVehicle().observe(this,{
+            if (it != null){
+                vehicleSearched = it
+                binding.exitVehicle.paymentValue.setText("$"+it.calculatePayment().toString())
+            }else{
+                vehicleSearched = null
             }
         })
     }
