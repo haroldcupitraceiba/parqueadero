@@ -1,12 +1,11 @@
-package co.com.ceiba.domain.entity
+package co.com.ceiba.domain.model
 
 import java.util.*
 
 class Car(
     override val licensePlate: String,
     override val entryDate: Date,
-    override var exitDate: Date?
-) : Vehicle(licensePlate,entryDate,exitDate) {
+) : Vehicle(licensePlate, Car::class.java.name,entryDate) {
 
     private val REGULAR_EXPRESSION_TO_VALID_LICENSE_PLATE_FORMAT = "[A-Z]{3}[0-9]{3}"
 
@@ -15,10 +14,16 @@ class Car(
     }
 
     init {
+        validateNotNullValues()
         validateFormatLicensePlate(LICENSE_PLATE_LENGTH,REGULAR_EXPRESSION_TO_VALID_LICENSE_PLATE_FORMAT)
     }
 
-    override fun calculatePayment(): Int {
-        return 0
+    override val parkingDayValue: Int
+        get() = 8000
+    override val parkingHourValue: Int
+        get() = 1000
+
+    override fun calculatePayment(): Long {
+        return Payment(entryDate,parkingHourValue,parkingDayValue).calculatePayment()
     }
 }

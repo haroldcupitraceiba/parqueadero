@@ -1,4 +1,4 @@
-package co.com.ceiba.domain;
+package co.com.ceiba.application;
 
 import org.junit.Test;
 

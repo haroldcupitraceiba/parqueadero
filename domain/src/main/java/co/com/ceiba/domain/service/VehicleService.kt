@@ -1,17 +1,12 @@
 package co.com.ceiba.domain.service
 
-import co.com.ceiba.domain.entity.Vehicle
+import co.com.ceiba.domain.model.Vehicle
 import co.com.ceiba.domain.exception.InvalidLicensePlateToDeleteVehicleParkingLotException
 import co.com.ceiba.domain.exception.InvalidVehicleToAddParkingLotException
 import co.com.ceiba.domain.repository.VehicleRepository
+import javax.inject.Inject
 
-class VehicleService{
-
-    private var vehicleRepository: VehicleRepository
-
-    constructor(vehicleRepository: VehicleRepository){
-        this.vehicleRepository = vehicleRepository
-    }
+class VehicleService @Inject constructor(@Inject var vehicleRepository: VehicleRepository) {
 
     fun saveVehicle(vehicle: Vehicle){
         if (vehicleRepository.vehicleExists(vehicle.licensePlate) == null){
