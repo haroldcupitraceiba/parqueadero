@@ -38,7 +38,8 @@
             android:layout_height="wrap_content"
             android:textAllCaps="true"
             android:maxLength="6"
-            android:inputType="textCapCharacters"
+            android:inputType="text|textCapCharacters"
+            android:digits="0,1,2,3,4,5,6,7,8,9,QWERTYUIOPASDFGHJKLZXCVBNM"
             />
 
     </com.google.android.material.textfield.TextInputLayout>
