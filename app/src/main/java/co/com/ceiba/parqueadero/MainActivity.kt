@@ -17,7 +17,6 @@ import co.com.ceiba.domain.service.EntryMotorcycleService
 import co.com.ceiba.domain.service.EntryService
 import co.com.ceiba.parqueadero.databinding.ActivityMainBinding
 import co.com.ceiba.parqueadero.viewmodel.VehicleViewModel
-import co.com.ceiba.parqueadero.viewmodel.VehicleViewModelFactory
 import dagger.hilt.android.AndroidEntryPoint
 import java.lang.Exception
 import java.util.*
@@ -69,10 +68,18 @@ class MainActivity : AppCompatActivity() {
                     vehicleApplicationService = VehicleApplicationService(entryService)
                 }
                 vehicleViewModel.setVehicleService(vehicleApplicationService)
-                vehicleViewModel.executeSearchVehicle()
+                vehicleViewModel.executeSearchVehicle().observe(this,{
+                    if (it != null){
+                        vehicleSearched = it
+                        binding.exitVehicle.paymentValue.setText("$"+it.calculatePayment().toString())
+                    }else{
+                        vehicleSearched = null
+                    }
+                })
             }catch (ex: Exception){
                 showToastMessage(ex.message.toString())
-                binding.exitVehicle.paymentValue.setText("$----")
+                binding.exitVehicle.exitLicensePlate.setText("")
+                binding.exitVehicle.paymentValue.setText("$0")
                 vehicleSearched = null
             }
         }
@@ -99,7 +106,11 @@ class MainActivity : AppCompatActivity() {
                     vehicleApplicationService = VehicleApplicationService(entryService)
                 }
                 vehicleViewModel.setVehicleService(vehicleApplicationService)
-                vehicleViewModel.executeDeleteVehicle()
+                vehicleViewModel.executeDeleteVehicle().observe(this,{
+                    it?.let {
+                        showToastMessage(it)
+                    }
+                })
                 showMenuOptions()
             }catch (ex: Exception){
                 showToastMessage(ex.message.toString())
@@ -136,7 +147,11 @@ class MainActivity : AppCompatActivity() {
                     vehicleApplicationService = VehicleApplicationService(entryService)
                 }
                 vehicleViewModel.setVehicleService(vehicleApplicationService)
-                vehicleViewModel.executeSaveVehicle()
+
+                vehicleViewModel.executeSaveVehicle().observe(this,{
+                    showToastMessage(it)
+                })
+
                 showMenuOptions()
             }catch (ex: Exception){
                 showToastMessage(ex.message.toString())
@@ -202,7 +217,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showExitVehicleLayout(){
-        binding.exitVehicle.searchButton.setText("")
+        binding.exitVehicle.exitLicensePlate.setText("")
+        binding.exitVehicle.paymentValue.setText("$0")
+        vehicleSearched = null
         binding.exitVehicle.exitVehicle.visibility = View.VISIBLE
         hideMenuOptions()
         hideEntryVehicleLayout()
@@ -224,34 +241,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initObservers() {
-        vehicleViewModel.observeSaveVehicle().observe(this, {
-            if (it){
-                showToastMessage("Vehiculo guardado")
-            }else{
-                showToastMessage("No se logro guardar el vehículo")
-            }
-        })
-
-        vehicleViewModel.observeDeleteVehicle().observe(this,{
-            if (it){
-                showToastMessage("Vehiculo eliminado")
-            }else{
-                showToastMessage("No se logro eliminar el vehículo")
-            }
-        })
 
         vehicleViewModel.observeInfoMessage().observe(this,{
             it?.let {
                 showToastMessage(it)
-            }
-        })
-
-        vehicleViewModel.observeSearchVehicle().observe(this,{
-            if (it != null){
-                vehicleSearched = it
-                binding.exitVehicle.paymentValue.setText("$"+it.calculatePayment().toString())
-            }else{
-                vehicleSearched = null
             }
         })
     }

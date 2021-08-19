@@ -1,22 +1,19 @@
 package co.com.ceiba.parqueadero.viewmodel
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import co.com.ceiba.application.VehicleApplicationService
 import co.com.ceiba.domain.model.Vehicle
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import java.lang.Exception
 import javax.inject.Inject
 
 @HiltViewModel
 class VehicleViewModel: ViewModel() {
 
-    private var vehicleSaved:MutableLiveData<Boolean>? = null
-    private var vehicleDeleted:MutableLiveData<Boolean>? = null
-    private var vehicleSearched:MutableLiveData<Vehicle?>? = null
+    private var vehicleSaved:LiveData<String>? = null
+    private var vehicleDeleted:LiveData<String>? = null
+    private var vehicleSearched:LiveData<Vehicle?>? = null
     private var message:MutableLiveData<String>? = null
     private lateinit var vehicleService: VehicleApplicationService
 
@@ -24,14 +21,14 @@ class VehicleViewModel: ViewModel() {
         this.vehicleService = vehicleService
     }
 
-    fun observeSaveVehicle() : LiveData<Boolean> {
+    fun observeSaveVehicle() : LiveData<String> {
         if (vehicleSaved == null){
             vehicleSaved = MutableLiveData()
         }
         return vehicleSaved!!
     }
 
-    fun observeDeleteVehicle() : LiveData<Boolean> {
+    fun observeDeleteVehicle() : LiveData<String> {
         if(vehicleDeleted == null) {
             vehicleDeleted = MutableLiveData()
         }
@@ -52,37 +49,41 @@ class VehicleViewModel: ViewModel() {
         return message!!
     }
 
-    fun executeDeleteVehicle() {
-        viewModelScope.launch {
+    fun executeDeleteVehicle() :LiveData<String> {
+        return liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
             try {
                 vehicleService.deleteVehicle()
-                vehicleDeleted?.value = true
+                emit("Vehículo eliminado.")
             }catch (ex: Exception){
-                message?.value = ex.message
-                vehicleDeleted?.value = false
+                ex.printStackTrace()
+                emit(ex.message!!)
             }
         }
     }
 
-    fun executeSaveVehicle() {
-        viewModelScope.launch {
+    fun executeSaveVehicle() :LiveData<String> {
+
+        return liveData(Dispatchers.IO) {
             try {
                 vehicleService.saveVehicle()
-                vehicleSaved?.value = true
+                emit("Vehículo registrado.")
             }catch (ex: Exception){
-                message?.value = ex.message
-                vehicleSaved?.value = false
+                ex.printStackTrace()
+                emit(ex.message!!)
             }
         }
     }
 
-    fun executeSearchVehicle(){
-        viewModelScope.launch {
+    fun executeSearchVehicle() : LiveData<Vehicle?>{
+        return liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
+            var vehicle: Vehicle?
             try {
-                vehicleSearched?.value = vehicleService.searchVehicle()
+                vehicle = vehicleService.searchVehicle()
+                emit(vehicle)
+
             }catch (ex: Exception){
-                message?.value = ex.message
-                vehicleSearched?.value = null
+                ex.printStackTrace()
+                emit(null)
             }
         }
     }
