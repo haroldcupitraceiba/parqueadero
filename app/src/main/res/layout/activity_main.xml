@@ -6,8 +6,16 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <include layout="@layout/menu_options"/>
+    <include
+        android:id="@+id/menu_options"
+        layout="@layout/menu_options"/>
 
+    <include
+        android:id="@+id/entry_vehicle"
+        layout="@layout/entry_vehicle"/>
 
+    <include
+        android:id="@+id/exit_vehicle"
+        layout="@layout/exit_vehicle"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

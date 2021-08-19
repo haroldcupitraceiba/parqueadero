@@ -10,7 +10,7 @@ class VehicleViewModelFactory(
 ): ViewModelProvider.Factory {
 
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        return VehicleViewModel(vehicleApplicationService) as T
+        return VehicleViewModel() as T
     }
 
 }

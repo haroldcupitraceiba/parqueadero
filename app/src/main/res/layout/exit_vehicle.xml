@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="8dp"
+    android:id="@+id/exit_vehicle"
+    android:visibility="gone">
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineExitLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent=".5"/>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/verticalGuidelineExitLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent=".5"/>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilLicensePlate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Placa del Vehículo"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        app:layout_constraintBottom_toTopOf="@id/searchButton"
+        android:layout_marginBottom="8dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/exitLicensePlate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAllCaps="true"
+            android:maxLength="6"
+            android:inputType="textCapCharacters"
+            />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <Button
+        android:id="@+id/searchButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Buscar"
+        app:layout_constraintBottom_toTopOf="@id/paymentValue"
+        />
+
+    <TextView
+        android:id="@+id/paymentValue"
+        android:textAlignment="center"
+        android:textSize="40sp"
+        android:text="$0"
+        app:layout_constraintBottom_toTopOf="@id/guidelineExitLayout"
+        android:layout_marginBottom="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <Button
+        android:id="@+id/cancelButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Cancelar"
+        app:layout_constraintTop_toBottomOf="@id/guidelineExitLayout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/verticalGuidelineExitLayout"
+        android:layout_marginEnd="4dp"
+        android:layout_marginTop="16dp"
+        />
+
+    <Button
+        android:id="@+id/exitButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="SALIDA"
+        app:layout_constraintTop_toBottomOf="@id/guidelineExitLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/verticalGuidelineExitLayout"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="16dp"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

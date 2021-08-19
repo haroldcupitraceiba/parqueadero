@@ -12,39 +12,39 @@ import java.lang.Exception
 import javax.inject.Inject
 
 @HiltViewModel
-class VehicleViewModel(
-    private val vehicleService: VehicleApplicationService
-)  : ViewModel() {
-
+class VehicleViewModel: ViewModel() {
 
     private var vehicleSaved:MutableLiveData<Boolean>? = null
     private var vehicleDeleted:MutableLiveData<Boolean>? = null
     private var message:MutableLiveData<String>? = null
+    private lateinit var vehicleService: VehicleApplicationService
 
-    fun executeSaveVehicle() : LiveData<Boolean> {
+    fun setVehicleService(vehicleService: VehicleApplicationService){
+        this.vehicleService = vehicleService
+    }
+
+    fun observeSaveVehicle() : LiveData<Boolean> {
         if (vehicleSaved == null){
             vehicleSaved = MutableLiveData()
-            saveVehicle()
         }
         return vehicleSaved!!
     }
 
-    fun executeDeleteVehicle() : LiveData<Boolean> {
+    fun observeDeleteVehicle() : LiveData<Boolean> {
         if(vehicleDeleted == null) {
             vehicleDeleted = MutableLiveData()
-            deleteVehicle()
         }
         return vehicleDeleted!!
     }
 
-    fun executeInfoMessage() : LiveData<String> {
+    fun observeInfoMessage() : LiveData<String> {
         if (message == null){
             message = MutableLiveData()
         }
         return message!!
     }
 
-    private  fun deleteVehicle() {
+    fun executeDeleteVehicle() {
         viewModelScope.launch {
             try {
                 vehicleService.deleteVehicle()
@@ -56,7 +56,7 @@ class VehicleViewModel(
         }
     }
 
-    private fun saveVehicle() {
+    fun executeSaveVehicle() {
         viewModelScope.launch {
             try {
                 vehicleService.saveVehicle()

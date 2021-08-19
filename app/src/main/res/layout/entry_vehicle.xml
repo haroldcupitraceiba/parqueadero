@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="8dp"
+    android:id="@+id/entry_vehicle"
+    android:visibility="gone">
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineEntryLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.5"/>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/verticalGuidelineEntryLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5"/>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilLicensePlate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Placa del Vehículo"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        app:layout_constraintBottom_toTopOf="@id/tilCylinderCapacity"
+
+        android:layout_marginBottom="8dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/entryLicensePlate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAllCaps="true"
+            android:maxLength="6"
+            android:inputType="textCapCharacters"
+            />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilCylinderCapacity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Cilindraje"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        app:layout_constraintBottom_toTopOf="@id/guidelineEntryLayout"
+        android:layout_marginBottom="8dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/cylinderCapacity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAllCaps="true"
+            android:maxLength="4"
+            android:inputType="number"
+            />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <RadioGroup
+        android:id="@+id/typeVehiclesOptions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="2"
+        app:layout_constraintBottom_toTopOf="@+id/tilLicensePlate"
+        android:layout_marginBottom="8dp">
+
+        <RadioButton
+            android:id="@+id/radioCar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Carro"
+            android:checked="true"
+            />
+
+        <RadioButton
+            android:id="@+id/radioMotorcycle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:text="Motocicleta" />
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/cancelButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Cancelar"
+        app:layout_constraintTop_toBottomOf="@id/guidelineEntryLayout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/verticalGuidelineEntryLayout"
+        android:layout_marginEnd="4dp"
+        android:layout_marginTop="16dp"
+
+        />
+
+    <Button
+        android:id="@+id/entryButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Ingresar"
+        app:layout_constraintTop_toBottomOf="@id/guidelineEntryLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/verticalGuidelineEntryLayout"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="16dp"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
