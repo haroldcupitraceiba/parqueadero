@@ -50,29 +50,8 @@ class MainActivityMotorcycleTest {
                 ViewMatchers.isDisplayed()
             )
         )
+
         textView.check(ViewAssertions.matches(ViewMatchers.withText("Vehículo registrado.")))
-
-        onView(
-            withId(R.id.entryOptionButton)
-        ).perform(ViewActions.click())
-
-        onView(
-            Matchers.allOf(
-                withId(R.id.radioMotorcycleEntry)
-            )
-        ).perform(ViewActions.click())
-
-        licensePlateTextInput.perform(typeText("HAC96H"))
-
-        onView(
-            withId(R.id.cylinderCapacityEntry)
-        ).perform(typeText("100"))
-
-        onView(
-            withId(R.id.entryButton)
-        ).perform(ViewActions.click())
-
-        textView.check(ViewAssertions.matches(ViewMatchers.withText("El vehículo ya se encuentra registrado.")))
 
 
         Espresso.onView(
