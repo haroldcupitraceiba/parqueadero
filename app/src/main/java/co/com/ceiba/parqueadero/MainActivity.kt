@@ -2,8 +2,6 @@ package co.com.ceiba.parqueadero
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.InputFilter
-import android.text.Spanned
 import android.view.View
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
@@ -55,7 +53,7 @@ class MainActivity : AppCompatActivity() {
                 val licensePlate = binding.exitVehicle.exitLicensePlate.text.toString()
                 val vehicleRepositoryImpl = VehicleRepositoryImpl(this)
 
-                if(binding.exitVehicle.radioCar.isChecked){
+                if(binding.exitVehicle.radioCarExit.isChecked){
                     vehicle = Car(licensePlate, Date())
                     val carRepository = CarRepositoryImpl(this)
                     val carService = EntryCarService(carRepository)
@@ -75,11 +73,12 @@ class MainActivity : AppCompatActivity() {
                         vehicleSearched = it
                         binding.exitVehicle.paymentValue.setText("$"+it.calculatePayment().toString())
                     }else{
+                        showMessage("Vehículo no encontrado.")
                         vehicleSearched = null
                     }
                 })
             }catch (ex: Exception){
-                showToastMessage(ex.message.toString())
+                showMessage(ex.message.toString())
                 binding.exitVehicle.exitLicensePlate.setText("")
                 binding.exitVehicle.paymentValue.setText("$0")
                 vehicleSearched = null
@@ -95,7 +94,7 @@ class MainActivity : AppCompatActivity() {
                 var vehicleApplicationService: VehicleApplicationService
                 val vehicleRepositoryImpl = VehicleRepositoryImpl(this)
 
-                if(binding.exitVehicle.radioCar.isChecked){
+                if(binding.exitVehicle.radioCarExit.isChecked){
 
                     val carRepository = CarRepositoryImpl(this)
                     val carService = EntryCarService(carRepository)
@@ -110,12 +109,12 @@ class MainActivity : AppCompatActivity() {
                 vehicleViewModel.setVehicleService(vehicleApplicationService)
                 vehicleViewModel.executeDeleteVehicle().observe(this,{
                     it?.let {
-                        showToastMessage(it)
+                        showMessage(it)
                     }
                 })
                 showMenuOptions()
             }catch (ex: Exception){
-                showToastMessage(ex.message.toString())
+                showMessage(ex.message.toString())
             }
         }
 
@@ -134,14 +133,16 @@ class MainActivity : AppCompatActivity() {
                 val licensePlate = binding.entryVehicle.entryLicensePlate.text.toString()
                 val vehicleRepositoryImpl = VehicleRepositoryImpl(this)
 
-                if(binding.entryVehicle.radioCar.isChecked){
+                if(binding.entryVehicle.radioCarEntry.isChecked){
                     vehicle = Car(licensePlate, Date())
                     val carRepository = CarRepositoryImpl(this)
                     val carService = EntryCarService(carRepository)
                     val entryService = EntryService(vehicle, vehicleRepositoryImpl, carService)
                     vehicleApplicationService = VehicleApplicationService(entryService)
                 }else{
-                    val cylinderCapacity = binding.entryVehicle.cylinderCapacity.text.toString().toInt()
+                    val cylinderCapacity = if(!binding.entryVehicle.cylinderCapacityEntry.text.toString().isNullOrEmpty())
+                            binding.entryVehicle.cylinderCapacityEntry.text.toString().toInt()
+                        else 0
                     vehicle = Motorcycle(licensePlate,Date(),cylinderCapacity)
                     val motorcycleRepository = MotorcycleRepositoryImpl(this)
                     val motorcycleService = EntryMotorcycleService(motorcycleRepository)
@@ -151,12 +152,12 @@ class MainActivity : AppCompatActivity() {
                 vehicleViewModel.setVehicleService(vehicleApplicationService)
 
                 vehicleViewModel.executeSaveVehicle().observe(this,{
-                    showToastMessage(it)
+                    showMessage(it)
                 })
 
                 showMenuOptions()
             }catch (ex: Exception){
-                showToastMessage(ex.message.toString())
+                showMessage(ex.message.toString())
             }
         }
 
@@ -164,18 +165,18 @@ class MainActivity : AppCompatActivity() {
             showMenuOptions()
         }
 
-        binding.entryVehicle.radioCar.setOnClickListener {
-            binding.entryVehicle.cylinderCapacity.setText("")
-            if (binding.entryVehicle.radioCar.isChecked){
+        binding.entryVehicle.radioCarEntry.setOnClickListener {
+            binding.entryVehicle.cylinderCapacityEntry.setText("")
+            if (binding.entryVehicle.radioCarEntry.isChecked){
                 hideCylinderCapacity()
             }else{
                 showCylinderCapacity()
             }
         }
 
-        binding.entryVehicle.radioMotorcycle.setOnClickListener {
-            binding.entryVehicle.cylinderCapacity.setText("")
-            if (binding.entryVehicle.radioMotorcycle.isChecked){
+        binding.entryVehicle.radioMotorcycleEntry.setOnClickListener {
+            binding.entryVehicle.cylinderCapacityEntry.setText("")
+            if (binding.entryVehicle.radioMotorcycleEntry.isChecked){
                 showCylinderCapacity()
             }else{
                 hideCylinderCapacity()
@@ -193,7 +194,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun resetEntryValues(){
         binding.entryVehicle.entryLicensePlate.setText("")
-        binding.entryVehicle.radioCar.isChecked = true
+        binding.entryVehicle.radioCarEntry.isChecked = true
         hideCylinderCapacity()
     }
 
@@ -246,12 +247,12 @@ class MainActivity : AppCompatActivity() {
 
         vehicleViewModel.observeInfoMessage().observe(this,{
             it?.let {
-                showToastMessage(it)
+                showMessage(it)
             }
         })
     }
 
-    private fun showToastMessage(message:String){
-        Toast.makeText(this,message,Toast.LENGTH_SHORT).show()
+    private fun showMessage(message:String){
+        binding.infoMessage.setText(message)
     }
 }

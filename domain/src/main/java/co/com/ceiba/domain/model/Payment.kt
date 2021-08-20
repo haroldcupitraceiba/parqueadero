@@ -5,9 +5,9 @@ import java.util.*
 import kotlin.math.ceil
 
 class Payment(
-    private val dateEntry: Date,
-    private val parkingHourValue: Int,
-    private val parkingDayValue: Int
+    private val dateEntry: Date?,
+    private val parkingHourValue: Int?,
+    private val parkingDayValue: Int?
 ) {
     private val initRangeHoursDay = 9
     private val endRangeHoursDay = 24
@@ -40,16 +40,18 @@ class Payment(
             hoursToPay = parkingHours
         }
 
-        return ( (daysToPay * parkingDayValue) + (hoursToPay * parkingHourValue) )
+        return ( (daysToPay * parkingDayValue!!) + (hoursToPay * parkingHourValue!!) )
     }
 
     private fun getParkingHours(): Long {
-        var diff = Date().time - dateEntry.time
+        var diff = Date().time - dateEntry!!.time
         var minutesDiff = (diff / (60 * 1000))
-        return if(minutesDiff <= 60)
+        return if(minutesDiff <= 60){
                 1
-            else
+            }
+            else{
                 (diff / ( 60 * 60 * 1000))
+            }
     }
 
 }

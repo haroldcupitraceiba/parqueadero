@@ -31,7 +31,7 @@
         android:layout_marginBottom="8dp">
 
         <RadioButton
-            android:id="@+id/radioCar"
+            android:id="@+id/radioCarExit"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -40,7 +40,7 @@
             />
 
         <RadioButton
-            android:id="@+id/radioMotorcycle"
+            android:id="@+id/radioMotorcycleExit"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

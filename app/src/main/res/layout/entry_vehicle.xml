@@ -6,7 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="8dp"
     android:id="@+id/entry_vehicle"
-    android:visibility="gone">
+    android:visibility="visible">
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineEntryLayout"
@@ -29,7 +29,6 @@
         android:hint="Placa del Vehículo"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         app:layout_constraintBottom_toTopOf="@id/tilCylinderCapacity"
-
         android:layout_marginBottom="8dp">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -54,7 +53,7 @@
         android:layout_marginBottom="8dp">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/cylinderCapacity"
+            android:id="@+id/cylinderCapacityEntry"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAllCaps="true"
@@ -75,7 +74,7 @@
         android:layout_marginBottom="8dp">
 
         <RadioButton
-            android:id="@+id/radioCar"
+            android:id="@+id/radioCarEntry"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -84,7 +83,7 @@
             />
 
         <RadioButton
-            android:id="@+id/radioMotorcycle"
+            android:id="@+id/radioMotorcycleEntry"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
