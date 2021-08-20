@@ -37,7 +37,11 @@ class MainActivityTest {
             withId(R.id.entryLicensePlate)
         ).perform(click())
 
-        licensePlateTextInput.perform(typeText("BBB123"))
+        licensePlateTextInput.perform(typeText("XXX123"))
+
+        onView(
+            ViewMatchers.withId(R.id.entryLicensePlate)
+        ).perform(ViewActions.closeSoftKeyboard())
 
         onView(
             withId(R.id.entryButton)
@@ -61,7 +65,11 @@ class MainActivityTest {
             )
         ).perform(click())
 
-        licensePlateTextInput.perform(typeText("BBB123"))
+        licensePlateTextInput.perform(typeText("XXX123"))
+
+        onView(
+            ViewMatchers.withId(R.id.entryLicensePlate)
+        ).perform(ViewActions.closeSoftKeyboard())
 
         onView(
             withId(R.id.entryButton)
@@ -81,7 +89,7 @@ class MainActivityTest {
 
         onView(
             withId(R.id.exitLicensePlate)
-        ).perform(typeText("BBB123"))
+        ).perform(typeText("XXX123"))
 
         onView(
             ViewMatchers.withId(R.id.exitLicensePlate)
