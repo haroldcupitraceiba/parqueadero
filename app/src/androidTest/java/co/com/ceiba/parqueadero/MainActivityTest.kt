@@ -1,9 +1,11 @@
 package co.com.ceiba.parqueadero
 
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.assertion.ViewAssertions
+import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.*
 import org.hamcrest.Matchers.allOf
 import androidx.test.ext.junit.rules.ActivityScenarioRule
@@ -80,6 +82,10 @@ class MainActivityTest {
         onView(
             withId(R.id.exitLicensePlate)
         ).perform(typeText("BBC123"))
+
+        onView(
+            ViewMatchers.withId(R.id.exitLicensePlate)
+        ).perform(ViewActions.closeSoftKeyboard())
 
         onView(
             withId(R.id.searchButton)

@@ -3,6 +3,7 @@ package co.com.ceiba.parqueadero
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions
+import androidx.test.espresso.action.ViewActions.closeSoftKeyboard
 import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers
@@ -53,6 +54,27 @@ class MainActivityMotorcycleTest {
 
         textView.check(ViewAssertions.matches(ViewMatchers.withText("Vehículo registrado.")))
 
+        onView(
+            withId(R.id.entryOptionButton)
+        ).perform(ViewActions.click())
+
+        onView(
+            Matchers.allOf(
+                withId(R.id.radioMotorcycleEntry)
+            )
+        ).perform(ViewActions.click())
+
+        licensePlateTextInput.perform(typeText("HAC96H"))
+
+        onView(
+            withId(R.id.cylinderCapacityEntry)
+        ).perform(typeText("100"))
+
+        onView(
+            withId(R.id.entryButton)
+        ).perform(ViewActions.click())
+
+        textView.check(ViewAssertions.matches(ViewMatchers.withText("El vehículo ya se encuentra registrado.")))
 
         Espresso.onView(
             ViewMatchers.withId(R.id.exitOptionButton)
@@ -67,6 +89,10 @@ class MainActivityMotorcycleTest {
         onView(
             ViewMatchers.withId(R.id.exitLicensePlate)
         ).perform(typeText("HAC96H"))
+
+        onView(
+            ViewMatchers.withId(R.id.exitLicensePlate)
+        ).perform(closeSoftKeyboard())
 
         Espresso.onView(
             ViewMatchers.withId(R.id.searchButton)
