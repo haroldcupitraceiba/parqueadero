@@ -23,51 +23,7 @@ class MainActivityTest {
 
     @Test
     fun car_saveAndDeleteCarFromDatabase_successful(){
-        onView(
-            withId(R.id.entryOptionButton)
-        ).perform(click())
 
-        onView(
-            allOf(
-                withId(R.id.radioCarEntry)
-            )
-        ).perform(click())
-
-        val licensePlateTextInput = onView(
-            withId(R.id.entryLicensePlate)
-        ).perform(click())
-
-        licensePlateTextInput.perform(typeText("BBC123"))
-
-        onView(
-            withId(R.id.entryButton)
-        ).perform(click())
-
-        val textView = onView(
-            allOf(
-                withId(R.id.infoMessage),
-                isDisplayed()
-            )
-        )
-        textView.check(ViewAssertions.matches(withText("Vehículo registrado.")))
-
-        onView(
-            withId(R.id.entryOptionButton)
-        ).perform(click())
-
-        onView(
-            allOf(
-                withId(R.id.radioCarEntry)
-            )
-        ).perform(click())
-
-        licensePlateTextInput.perform(typeText("BBC123"))
-
-        onView(
-            withId(R.id.entryButton)
-        ).perform(click())
-
-        textView.check(ViewAssertions.matches(withText("El vehículo ya se encuentra registrado.")))
 
         onView(
             withId(R.id.exitOptionButton)
@@ -95,7 +51,7 @@ class MainActivityTest {
             withId(R.id.exitButton)
         ).perform(click())
 
-        textView.check(ViewAssertions.matches(withText("Vehículo eliminado.")))
+        onView(withId(R.id.infoMessage)).check(ViewAssertions.matches(withText("Vehículo eliminado.")))
     }
 
     @Test

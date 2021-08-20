@@ -67,6 +67,10 @@ class MainActivityMotorcycleTest {
         licensePlateTextInput.perform(typeText("HAC96H"))
 
         onView(
+            ViewMatchers.withId(R.id.entryLicensePlate)
+        ).perform(ViewActions.closeSoftKeyboard())
+
+        onView(
             withId(R.id.cylinderCapacityEntry)
         ).perform(typeText("100"))
 
