@@ -21,7 +21,7 @@ class MainActivityMotorcycleTest {
     val activityScenarioRule = ActivityScenarioRule(MainActivity::class.java)
 
     @Test
-    fun motorcycle_saveMotorcycleWithOutExistsVehicleInDatabase_successful(){
+    fun motorcycle_saveAndDeleteMotorcycleFromDatabase_successful(){
         onView(
             withId(R.id.entryOptionButton)
         ).perform(ViewActions.click())
@@ -73,6 +73,31 @@ class MainActivityMotorcycleTest {
         ).perform(ViewActions.click())
 
         textView.check(ViewAssertions.matches(ViewMatchers.withText("El vehículo ya se encuentra registrado.")))
+
+
+        Espresso.onView(
+            ViewMatchers.withId(R.id.exitOptionButton)
+        ).perform(ViewActions.click())
+
+        Espresso.onView(
+            Matchers.allOf(
+                ViewMatchers.withId(R.id.radioMotorcycleExit)
+            )
+        ).perform(ViewActions.click())
+
+        onView(
+            ViewMatchers.withId(R.id.exitLicensePlate)
+        ).perform(typeText("HAC96H"))
+
+        Espresso.onView(
+            ViewMatchers.withId(R.id.searchButton)
+        ).perform(ViewActions.click())
+
+        Espresso.onView(
+            ViewMatchers.withId(R.id.exitButton)
+        ).perform(ViewActions.click())
+
+        textView.check(ViewAssertions.matches(ViewMatchers.withText("Vehículo eliminado.")))
     }
 
     @Test
@@ -131,41 +156,6 @@ class MainActivityMotorcycleTest {
             )
         )
         textView.check(ViewAssertions.matches(ViewMatchers.withText("El cilindraje debe ser mayor a 0.")))
-    }
-
-    @Test
-    fun motorcycle_deleteMotorcycleFromDatabase_successful(){
-        Espresso.onView(
-            ViewMatchers.withId(R.id.exitOptionButton)
-        ).perform(ViewActions.click())
-
-        Espresso.onView(
-            Matchers.allOf(
-                ViewMatchers.withId(R.id.radioMotorcycleExit)
-            )
-        ).perform(ViewActions.click())
-
-        val licensePlateTextInput = Espresso.onView(
-            ViewMatchers.withId(R.id.exitLicensePlate)
-        ).perform(ViewActions.click())
-
-        licensePlateTextInput.perform(ViewActions.typeText("HAC96H"))
-
-        Espresso.onView(
-            ViewMatchers.withId(R.id.searchButton)
-        ).perform(ViewActions.click())
-
-        Espresso.onView(
-            ViewMatchers.withId(R.id.exitButton)
-        ).perform(ViewActions.click())
-
-        val textView = Espresso.onView(
-            Matchers.allOf(
-                ViewMatchers.withId(R.id.infoMessage),
-                ViewMatchers.isDisplayed()
-            )
-        )
-        textView.check(ViewAssertions.matches(ViewMatchers.withText("Vehículo eliminado.")))
     }
 
     @Test

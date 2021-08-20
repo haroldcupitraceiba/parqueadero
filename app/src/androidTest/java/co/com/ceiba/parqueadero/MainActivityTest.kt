@@ -20,7 +20,7 @@ class MainActivityTest {
     val activityScenarioRule = ActivityScenarioRule(MainActivity::class.java)
 
     @Test
-    fun car_saveCarWithOutExistsVehicleInDatabase_successful(){
+    fun car_saveAndDeleteCarFromDatabase_successful(){
         onView(
             withId(R.id.entryOptionButton)
         ).perform(click())
@@ -66,6 +66,30 @@ class MainActivityTest {
         ).perform(click())
 
         textView.check(ViewAssertions.matches(withText("El vehículo ya se encuentra registrado.")))
+
+        onView(
+            withId(R.id.exitOptionButton)
+        ).perform(click())
+
+        onView(
+            allOf(
+                withId(R.id.radioCarExit)
+            )
+        ).perform(click())
+
+        onView(
+            withId(R.id.exitLicensePlate)
+        ).perform(typeText("BBC123"))
+
+        onView(
+            withId(R.id.searchButton)
+        ).perform(click())
+
+        onView(
+            withId(R.id.exitButton)
+        ).perform(click())
+
+        textView.check(ViewAssertions.matches(withText("Vehículo eliminado.")))
     }
 
     @Test
@@ -91,41 +115,6 @@ class MainActivityTest {
             )
         )
         textView.check(ViewAssertions.matches(withText("Placa del vehículo no valida.")))
-    }
-
-    @Test
-    fun car_deleteCarFromDatabase_successful(){
-        onView(
-            withId(R.id.exitOptionButton)
-        ).perform(click())
-
-        onView(
-            allOf(
-                withId(R.id.radioCarExit)
-            )
-        ).perform(click())
-
-        val licensePlateTextInput = onView(
-            withId(R.id.exitLicensePlate)
-        ).perform(click())
-
-        licensePlateTextInput.perform(typeText("BBC123"))
-
-        onView(
-            withId(R.id.searchButton)
-        ).perform(click())
-
-        onView(
-            withId(R.id.exitButton)
-        ).perform(click())
-
-        val textView = onView(
-            allOf(
-                withId(R.id.infoMessage),
-                isDisplayed()
-            )
-        )
-        textView.check(ViewAssertions.matches(withText("Vehículo eliminado.")))
     }
 
     @Test
