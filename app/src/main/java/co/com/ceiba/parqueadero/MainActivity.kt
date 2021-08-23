@@ -16,6 +16,7 @@ import co.com.ceiba.domain.service.EntryCarService
 import co.com.ceiba.domain.service.EntryMotorcycleService
 import co.com.ceiba.domain.service.EntryService
 import co.com.ceiba.parqueadero.databinding.ActivityMainBinding
+import co.com.ceiba.parqueadero.factory.VehicleApplicationFactory
 import co.com.ceiba.parqueadero.viewmodel.VehicleViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.lang.Exception
@@ -49,34 +50,32 @@ class MainActivity : AppCompatActivity() {
         binding.exitVehicle.searchButton.setOnClickListener {
             try {
                 var vehicle:Vehicle
-                var vehicleApplicationService: VehicleApplicationService
+                var vehicleApplicationService: VehicleApplicationService?
                 val licensePlate = binding.exitVehicle.exitLicensePlate.text.toString()
-                val vehicleRepositoryImpl = VehicleRepositoryImpl(this)
 
                 if(binding.exitVehicle.radioCarExit.isChecked){
                     vehicle = Car(licensePlate, Date())
-                    val carRepository = CarRepositoryImpl(this)
-                    val carService = EntryCarService(carRepository)
-                    val entryService = EntryService(vehicle, vehicleRepositoryImpl, carService)
-                    vehicleApplicationService = VehicleApplicationService(entryService)
+                    vehicleApplicationService =
+                        VehicleApplicationFactory(vehicle, this, VehicleApplicationFactory.CAR_TYPE).getVehicle()
                 }else{
                     val cylinderCapacity = 100
                     vehicle = Motorcycle(licensePlate,Date(),cylinderCapacity)
-                    val motorcycleRepository = MotorcycleRepositoryImpl(this)
-                    val motorcycleService = EntryMotorcycleService(motorcycleRepository)
-                    val entryService = EntryService(vehicle, vehicleRepositoryImpl, motorcycleService)
-                    vehicleApplicationService = VehicleApplicationService(entryService)
+                    vehicleApplicationService =
+                        VehicleApplicationFactory(vehicle, this, VehicleApplicationFactory.MOTORCYCLE_TYPE).getVehicle()
                 }
-                vehicleViewModel.setVehicleService(vehicleApplicationService)
-                vehicleViewModel.executeSearchVehicle().observe(this,{
-                    if (it != null){
-                        vehicleSearched = it.vehicle
-                        binding.exitVehicle.paymentValue.setText("$"+it.calculatePayment().toString())
-                    }else{
-                        showMessage("Vehículo no encontrado.")
-                        vehicleSearched = null
-                    }
-                })
+
+                if (vehicleApplicationService != null){
+                    vehicleViewModel.setVehicleService(vehicleApplicationService)
+                    vehicleViewModel.executeSearchVehicle().observe(this,{
+                        if (it != null){
+                            vehicleSearched = it.vehicle
+                            binding.exitVehicle.paymentValue.setText("$"+it.calculatePayment().toString())
+                        }else{
+                            showMessage("Vehículo no encontrado.")
+                            vehicleSearched = null
+                        }
+                    })
+                }
             }catch (ex: Exception){
                 showMessage(ex.message.toString())
                 binding.exitVehicle.exitLicensePlate.setText("")
