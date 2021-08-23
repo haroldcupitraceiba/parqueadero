@@ -10,10 +10,12 @@ open abstract class Vehicle(
     open val licensePlate: String,
     open val type: String,
     open val entryDate: Date,
-    open val cylinderCapacity: Int? = null
+    open val cylinderCapacity: Int = 0
 ){
     abstract val parkingDayValue: Int
     abstract val parkingHourValue: Int
+    abstract val maximumCylinderCapacityToNotPayExtraValue: Int
+    abstract val payExtraValue : Int
 
     protected fun validateNotNullValues(){
         if (licensePlate.isNullOrEmpty()){
@@ -36,5 +38,5 @@ open abstract class Vehicle(
         return matcher.matches()
     }
 
-    abstract fun calculatePayment(): Long
+    abstract fun hasToValidCylinderCapacityInPayment(): Boolean
 }

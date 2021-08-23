@@ -78,7 +78,7 @@ class CarTest {
         val licensePlate = "AZZ039"
         val car = Car(licensePlate, entryDate)
 
-        val paymentValue = car.calculatePayment()
+        val paymentValue = Payment(car).calculatePayment()
 
         Assert.assertEquals(8000L,paymentValue)
     }
@@ -94,7 +94,7 @@ class CarTest {
         val licensePlate = "AZZ039"
         val car = Car(licensePlate, entryDate)
 
-        val paymentValue = car.calculatePayment()
+        val paymentValue = Payment(car).calculatePayment()
 
         Assert.assertEquals(24000L,paymentValue)
     }
@@ -110,7 +110,7 @@ class CarTest {
         val licensePlate = "AZZ039"
         val car = Car(licensePlate, entryDate)
 
-        val paymentValue = car.calculatePayment()
+        val paymentValue = Payment(car).calculatePayment()
 
         Assert.assertEquals(7000L,paymentValue)
     }

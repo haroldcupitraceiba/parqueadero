@@ -101,7 +101,7 @@ class MotorcycleTest {
         val cylinderCapacity = 150
         val motorcycle = Motorcycle(licensePlate, entryDate, cylinderCapacity)
 
-        val paymentValue = motorcycle.calculatePayment()
+        val paymentValue = Payment(motorcycle).calculatePayment()
 
         Assert.assertEquals(4000L,paymentValue)
     }
@@ -118,7 +118,7 @@ class MotorcycleTest {
         val cylinderCapacity = 150
         val motorcycle = Motorcycle(licensePlate, entryDate, cylinderCapacity)
 
-        val paymentValue = motorcycle.calculatePayment()
+        val paymentValue = Payment(motorcycle).calculatePayment()
 
         Assert.assertEquals(12000L,paymentValue)
     }
@@ -135,7 +135,7 @@ class MotorcycleTest {
         val cylinderCapacity = 150
         val motorcycle = Motorcycle(licensePlate, entryDate, cylinderCapacity)
 
-        val paymentValue = motorcycle.calculatePayment()
+        val paymentValue = Payment(motorcycle).calculatePayment()
 
         Assert.assertEquals(3500L,paymentValue)
     }
@@ -152,7 +152,7 @@ class MotorcycleTest {
         val cylinderCapacity = 600
         val motorcycle = Motorcycle(licensePlate, entryDate, cylinderCapacity)
 
-        val paymentValue = motorcycle.calculatePayment()
+        val paymentValue = Payment(motorcycle).calculatePayment()
 
         Assert.assertEquals(6000L,paymentValue)
     }
@@ -169,7 +169,7 @@ class MotorcycleTest {
         val cylinderCapacity = 600
         val motorcycle = Motorcycle(licensePlate, entryDate, cylinderCapacity)
 
-        val paymentValue = motorcycle.calculatePayment()
+        val paymentValue = Payment(motorcycle).calculatePayment()
 
         Assert.assertEquals(14000L,paymentValue)
     }
@@ -186,7 +186,7 @@ class MotorcycleTest {
         val cylinderCapacity = 600
         val motorcycle = Motorcycle(licensePlate, entryDate, cylinderCapacity)
 
-        val paymentValue = motorcycle.calculatePayment()
+        val paymentValue = Payment(motorcycle).calculatePayment()
 
         Assert.assertEquals(5500L,paymentValue)
     }

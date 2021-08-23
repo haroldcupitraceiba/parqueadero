@@ -1,12 +1,11 @@
 package co.com.ceiba.domain.service
 
-import android.util.Log
 import co.com.ceiba.domain.model.Vehicle
 import co.com.ceiba.domain.exception.InvalidVehicleToAddParkingLotException
 import co.com.ceiba.domain.exception.LicensePlateEntryDeniedException
 import co.com.ceiba.domain.exception.VehicleLimitException
+import co.com.ceiba.domain.model.Payment
 import co.com.ceiba.domain.repository.VehicleRepository
-import java.text.SimpleDateFormat
 import java.util.*
 
 class EntryService(
@@ -28,11 +27,19 @@ class EntryService(
         }
 
         vehicleRepository.saveVehicle(vehicle)
-
     }
 
     fun searchVehicle(): Vehicle?{
         return vehicleRepository.vehicleExists(vehicle.licensePlate)
+    }
+
+    fun getPayment(): Payment? {
+        val vehicle = searchVehicle()
+        var payment: Payment? = null
+        if (vehicle != null){
+            payment = Payment(vehicle)
+        }
+        return payment
     }
 
     fun deleteVehicle(){

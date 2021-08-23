@@ -70,7 +70,7 @@ class MainActivity : AppCompatActivity() {
                 vehicleViewModel.setVehicleService(vehicleApplicationService)
                 vehicleViewModel.executeSearchVehicle().observe(this,{
                     if (it != null){
-                        vehicleSearched = it
+                        vehicleSearched = it.vehicle
                         binding.exitVehicle.paymentValue.setText("$"+it.calculatePayment().toString())
                     }else{
                         showMessage("Vehículo no encontrado.")

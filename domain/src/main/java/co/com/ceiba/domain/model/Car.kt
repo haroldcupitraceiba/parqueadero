@@ -22,8 +22,12 @@ class Car(
         get() = 8000
     override val parkingHourValue: Int
         get() = 1000
+    override val maximumCylinderCapacityToNotPayExtraValue: Int
+        get() = 0
+    override val payExtraValue: Int
+        get() = 0
 
-    override fun calculatePayment(): Long {
-        return Payment(entryDate,parkingHourValue,parkingDayValue).calculatePayment()
+    override fun hasToValidCylinderCapacityInPayment(): Boolean {
+        return false
     }
 }

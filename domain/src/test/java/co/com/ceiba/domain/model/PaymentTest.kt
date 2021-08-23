@@ -10,26 +10,14 @@ class PaymentTest {
     fun payment_createPaymentWithCorrectParams_successful(){
         //Arrange
         val entryDate = Date()
+        val licensePlate = "AZZ039"
+        val car = Car(licensePlate, entryDate)
         //Act
-        val payment = Payment(entryDate, 1000,8000)
+        val payment = Payment(car)
         //Assert
         Assert.assertNotNull(payment)
     }
 
-    @Test
-    fun payment_createPaymentWithZeroParkingValues_exception(){
-        //Arrange
-        val entryDate = Date()
-        val expectedMessage = "Valor no valido para realizar pago."
-        try {
-            //Act
-            val payment = Payment(entryDate, 1000,0)
-            Assert.fail()
-        }catch (ex: ParkingValueNotValidException){
-            //Assert
-            Assert.assertEquals(expectedMessage, ex.message)
-        }
-    }
 
     @Test
     fun payment_calculatePaymentAfter7Hours_successful(){
@@ -39,8 +27,11 @@ class PaymentTest {
         calendar.add(Calendar.HOUR,-7)
 
         val entryDate = calendar.time
+        val licensePlate = "AZZ039"
+        val car = Car(licensePlate, entryDate)
+        val payment = Payment(car)
         //Act
-        val payment = Payment(entryDate, 1000,8000)
+
         val valueToPay = payment.calculatePayment()
         //Assert
         Assert.assertEquals(7000L,valueToPay)
@@ -54,8 +45,10 @@ class PaymentTest {
         calendar.add(Calendar.HOUR,-9)
 
         val entryDate = calendar.time
+        val licensePlate = "AZZ039"
+        val car = Car(licensePlate, entryDate)
+        val payment = Payment(car)
         //Act
-        val payment = Payment(entryDate, 1000,8000)
         val valueToPay = payment.calculatePayment()
         //Assert
         Assert.assertEquals(8000L,valueToPay)
@@ -69,8 +62,10 @@ class PaymentTest {
         calendar.add(Calendar.HOUR,-57)
 
         val entryDate = calendar.time
+        val licensePlate = "AZZ039"
+        val car = Car(licensePlate, entryDate)
+        val payment = Payment(car)
         //Act
-        val payment = Payment(entryDate, 1000,8000)
         val valueToPay = payment.calculatePayment()
         //Assert
         Assert.assertEquals(24000L,valueToPay)

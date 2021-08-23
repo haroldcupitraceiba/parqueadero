@@ -2,6 +2,7 @@ package co.com.ceiba.parqueadero.viewmodel
 
 import androidx.lifecycle.*
 import co.com.ceiba.application.VehicleApplicationService
+import co.com.ceiba.domain.model.Payment
 import co.com.ceiba.domain.model.Vehicle
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
@@ -74,12 +75,12 @@ class VehicleViewModel: ViewModel() {
         }
     }
 
-    fun executeSearchVehicle() : LiveData<Vehicle?>{
+    fun executeSearchVehicle() : LiveData<Payment?>{
         return liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
-            var vehicle: Vehicle?
+            var payment: Payment?
             try {
-                vehicle = vehicleService.searchVehicle()
-                emit(vehicle)
+                payment = vehicleService.getPaymentVehicle()
+                emit(payment)
 
             }catch (ex: Exception){
                 ex.printStackTrace()

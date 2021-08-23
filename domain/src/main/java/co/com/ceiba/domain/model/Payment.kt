@@ -2,12 +2,9 @@ package co.com.ceiba.domain.model
 
 import co.com.ceiba.domain.exception.ParkingValueNotValidException
 import java.util.*
-import kotlin.math.ceil
 
 class Payment(
-    private val dateEntry: Date?,
-    private val parkingHourValue: Int?,
-    private val parkingDayValue: Int?
+    val vehicle: Vehicle
 ) {
     private val initRangeHoursDay = 9
     private val endRangeHoursDay = 24
@@ -17,17 +14,27 @@ class Payment(
     }
 
     private fun validParkingValues() {
-        if (dateEntry == null || parkingHourValue == null || parkingDayValue == null)
+        if (vehicle == null){
+            throw ParkingValueNotValidException()
+        }
+
+        if (vehicle.entryDate == null || vehicle.parkingHourValue == null || vehicle.parkingDayValue == null)
             throw ParkingValueNotValidException()
 
-        if (parkingDayValue <= 0 || parkingHourValue <= 0)
+        if (vehicle.parkingDayValue <= 0 || vehicle.parkingHourValue <= 0)
             throw ParkingValueNotValidException()
+    }
+
+    @JvmName("getVehiclePayment")
+    fun getVehicle(): Vehicle{
+        return vehicle
     }
 
     fun calculatePayment(): Long {
         var parkingHours = getParkingHours()
         var hoursToPay : Long = 0
         var daysToPay : Long = 0
+        var totalValue : Long = 0
 
         if (parkingHours / endRangeHoursDay > 0){
             daysToPay = parkingHours / endRangeHoursDay
@@ -40,18 +47,23 @@ class Payment(
             hoursToPay = parkingHours
         }
 
-        return ( (daysToPay * parkingDayValue!!) + (hoursToPay * parkingHourValue!!) )
+        totalValue =  (daysToPay * vehicle.parkingDayValue!!) + (hoursToPay * vehicle.parkingHourValue!!)
+
+        if (vehicle.hasToValidCylinderCapacityInPayment() &&
+            vehicle.cylinderCapacity > vehicle.maximumCylinderCapacityToNotPayExtraValue){
+            totalValue += vehicle.payExtraValue.toLong()
+        }
+
+        return totalValue
     }
 
     private fun getParkingHours(): Long {
-        var diff = Date().time - dateEntry!!.time
+        var diff = Date().time - vehicle.entryDate!!.time
         var minutesDiff = (diff / (60 * 1000))
-        return if(minutesDiff <= 60){
-                1
-            }
-            else{
-                (diff / ( 60 * 60 * 1000))
-            }
+        var parkingHours = if(minutesDiff <= 60){ 1 } else{
+            (diff / ( 60 * 60 * 1000))
+        }
+        return parkingHours
     }
 
 }
