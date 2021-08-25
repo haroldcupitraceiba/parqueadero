@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Parqueadero</string>
+    <string name="vehicle_not_found">Vehículo no encontrado.</string>
 </resources>

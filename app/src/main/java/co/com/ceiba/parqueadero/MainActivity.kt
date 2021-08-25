@@ -3,18 +3,11 @@ package co.com.ceiba.parqueadero
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import co.com.ceiba.application.VehicleApplicationService
-import co.com.ceiba.dataaccess.repository.CarRepositoryImpl
-import co.com.ceiba.dataaccess.repository.MotorcycleRepositoryImpl
-import co.com.ceiba.dataaccess.repository.VehicleRepositoryImpl
 import co.com.ceiba.domain.model.Car
 import co.com.ceiba.domain.model.Motorcycle
 import co.com.ceiba.domain.model.Vehicle
-import co.com.ceiba.domain.service.EntryCarService
-import co.com.ceiba.domain.service.EntryMotorcycleService
-import co.com.ceiba.domain.service.EntryService
 import co.com.ceiba.parqueadero.databinding.ActivityMainBinding
 import co.com.ceiba.parqueadero.factory.VehicleApplicationFactory
 import co.com.ceiba.parqueadero.viewmodel.VehicleViewModel
@@ -69,7 +62,7 @@ class MainActivity : AppCompatActivity() {
                             vehicleSearched = it.vehicle
                             binding.exitVehicle.paymentValue.setText("$"+it.calculatePayment().toString())
                         }else{
-                            showMessage("Vehículo no encontrado.")
+                            showMessage(getString(R.string.vehicle_not_found))
                             vehicleSearched = null
                         }
                     })
@@ -87,31 +80,22 @@ class MainActivity : AppCompatActivity() {
             if (vehicleSearched == null)
                 return@setOnClickListener
 
-            try {
-                var vehicleApplicationService: VehicleApplicationService
-                val vehicleRepositoryImpl = VehicleRepositoryImpl(this)
+            var vehicleApplicationService = if(binding.exitVehicle.radioCarExit.isChecked){
+                VehicleApplicationFactory(vehicleSearched!!, this, VehicleApplicationFactory.CAR_TYPE).getVehicle()
+            }else{
+                VehicleApplicationFactory(vehicleSearched!!, this, VehicleApplicationFactory.MOTORCYCLE_TYPE).getVehicle()
+            }
 
-                if(binding.exitVehicle.radioCarExit.isChecked){
-
-                    val carRepository = CarRepositoryImpl(this)
-                    val carService = EntryCarService(carRepository)
-                    val entryService = EntryService(vehicleSearched!!, vehicleRepositoryImpl, carService)
-                    vehicleApplicationService = VehicleApplicationService(entryService)
-                }else{
-                    val motorcycleRepository = MotorcycleRepositoryImpl(this)
-                    val motorcycleService = EntryMotorcycleService(motorcycleRepository)
-                    val entryService = EntryService(vehicleSearched!!, vehicleRepositoryImpl, motorcycleService)
-                    vehicleApplicationService = VehicleApplicationService(entryService)
-                }
+            vehicleApplicationService?.let {vehicleApplicationService ->
                 vehicleViewModel.setVehicleService(vehicleApplicationService)
-                vehicleViewModel.executeDeleteVehicle().observe(this,{
+
+                vehicleViewModel.executeDeleteVehicle().observe(this,{ message ->
                     it?.let {
-                        showMessage(it)
+                        showMessage(message)
                     }
                 })
+
                 showMenuOptions()
-            }catch (ex: Exception){
-                showMessage(ex.message.toString())
             }
         }
 
@@ -124,28 +108,26 @@ class MainActivity : AppCompatActivity() {
         hideCylinderCapacity()
 
         binding.entryVehicle.entryButton.setOnClickListener {
-            try {
-                var vehicle:Vehicle
-                var vehicleApplicationService: VehicleApplicationService
-                val licensePlate = binding.entryVehicle.entryLicensePlate.text.toString()
-                val vehicleRepositoryImpl = VehicleRepositoryImpl(this)
 
-                if(binding.entryVehicle.radioCarEntry.isChecked){
-                    vehicle = Car(licensePlate, Date())
-                    val carRepository = CarRepositoryImpl(this)
-                    val carService = EntryCarService(carRepository)
-                    val entryService = EntryService(vehicle, vehicleRepositoryImpl, carService)
-                    vehicleApplicationService = VehicleApplicationService(entryService)
-                }else{
-                    val cylinderCapacity = if(!binding.entryVehicle.cylinderCapacityEntry.text.toString().isNullOrEmpty())
-                            binding.entryVehicle.cylinderCapacityEntry.text.toString().toInt()
-                        else 0
-                    vehicle = Motorcycle(licensePlate,Date(),cylinderCapacity)
-                    val motorcycleRepository = MotorcycleRepositoryImpl(this)
-                    val motorcycleService = EntryMotorcycleService(motorcycleRepository)
-                    val entryService = EntryService(vehicle, vehicleRepositoryImpl, motorcycleService)
-                    vehicleApplicationService = VehicleApplicationService(entryService)
-                }
+            var vehicle:Vehicle
+            var vehicleApplicationService: VehicleApplicationService?
+            val licensePlate = binding.entryVehicle.entryLicensePlate.text.toString()
+
+            if(binding.entryVehicle.radioCarEntry.isChecked){
+                vehicle = Car(licensePlate, Date())
+                vehicleApplicationService =
+                    VehicleApplicationFactory(vehicle, this, VehicleApplicationFactory.CAR_TYPE).getVehicle()
+            }else{
+                val cylinderCapacity = if(!binding.entryVehicle.cylinderCapacityEntry.text.toString().isNullOrEmpty())
+                        binding.entryVehicle.cylinderCapacityEntry.text.toString().toInt()
+                    else 0
+
+                vehicle = Motorcycle(licensePlate,Date(),cylinderCapacity)
+                vehicleApplicationService =
+                    VehicleApplicationFactory(vehicle, this, VehicleApplicationFactory.MOTORCYCLE_TYPE).getVehicle()
+            }
+
+            vehicleApplicationService?.let {
                 vehicleViewModel.setVehicleService(vehicleApplicationService)
 
                 vehicleViewModel.executeSaveVehicle().observe(this,{
@@ -153,8 +135,6 @@ class MainActivity : AppCompatActivity() {
                 })
 
                 showMenuOptions()
-            }catch (ex: Exception){
-                showMessage(ex.message.toString())
             }
         }
 
