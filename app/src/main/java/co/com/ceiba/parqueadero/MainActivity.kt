@@ -18,11 +18,9 @@ import co.com.ceiba.domain.service.EntryService
 import co.com.ceiba.parqueadero.databinding.ActivityMainBinding
 import co.com.ceiba.parqueadero.factory.VehicleApplicationFactory
 import co.com.ceiba.parqueadero.viewmodel.VehicleViewModel
-import dagger.hilt.android.AndroidEntryPoint
 import java.lang.Exception
 import java.util.*
 
-@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
 

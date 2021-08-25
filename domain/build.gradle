@@ -1,7 +1,6 @@
 plugins {
     id 'com.android.library'
     id 'kotlin-kapt'
-    id 'dagger.hilt.android.plugin'
     id 'kotlin-android'
     id 'jacoco'
 }
@@ -67,24 +66,20 @@ task jacocoTestReport(type: JacocoReport,
                       '**/*lambda.class',
                       '**/*lambda*.class']
 
-    def debugTree = fileTree(dir:
-            "${buildDir}/tmp/kotlin-classes/debug",
-            excludes: fileFilter
-    )
+    def debugTree = fileTree(dir: "${buildDir}/intermediates/classes/debug", excludes: fileFilter)
+    def kotlinDebugTree = fileTree(dir: "${buildDir}/tmp/kotlin-classes/debug", excludes: fileFilter)
 
     def mainSrc = "${project.projectDir}/src/main/java"
 
     sourceDirectories.setFrom(files([mainSrc]))
 
-    classDirectories.setFrom(files([debugTree]))
+    classDirectories.setFrom(files([debugTree], [kotlinDebugTree]))
     executionData.setFrom(fileTree(dir: "${buildDir}", includes:[
             "/jacoco/testDebugUnitTest.exec"]))
 }
 
 dependencies {
 
-    implementation "com.google.dagger:hilt-android:2.28-alpha"
-    annotationProcessor "com.google.dagger:hilt-android-compiler:2.28-alpha"
     testImplementation 'org.mockito:mockito-core:3.3.3'
 
     testImplementation 'junit:junit:4.+'

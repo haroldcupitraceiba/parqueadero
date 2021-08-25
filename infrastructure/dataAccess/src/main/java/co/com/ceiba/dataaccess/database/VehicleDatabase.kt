@@ -6,8 +6,6 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import co.com.ceiba.dataaccess.database.dao.VehicleDao
 import co.com.ceiba.dataaccess.database.entity.VehicleEntity
-import dagger.hilt.android.qualifiers.ApplicationContext
-import javax.inject.Inject
 
 @Database(entities = [VehicleEntity::class], version = 1)
 abstract class  VehicleDatabase : RoomDatabase() {

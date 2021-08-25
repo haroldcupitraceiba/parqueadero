@@ -4,12 +4,11 @@ import androidx.lifecycle.*
 import co.com.ceiba.application.VehicleApplicationService
 import co.com.ceiba.domain.model.Payment
 import co.com.ceiba.domain.model.Vehicle
-import dagger.hilt.android.lifecycle.HiltViewModel
+
 import kotlinx.coroutines.*
 import java.lang.Exception
-import javax.inject.Inject
 
-@HiltViewModel
+
 class VehicleViewModel: ViewModel() {
 
     private var vehicleSaved:LiveData<String>? = null
