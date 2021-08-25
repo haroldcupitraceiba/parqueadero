@@ -1,19 +1,21 @@
 package co.com.ceiba.parqueadero.viewmodel
 
+import android.content.Context
 import androidx.lifecycle.*
 import co.com.ceiba.application.VehicleApplicationService
+import co.com.ceiba.domain.model.Car
+import co.com.ceiba.domain.model.Motorcycle
 import co.com.ceiba.domain.model.Payment
-import co.com.ceiba.domain.model.Vehicle
+import co.com.ceiba.parqueadero.MainActivity
+import co.com.ceiba.parqueadero.factory.VehicleApplicationFactory
 
 import kotlinx.coroutines.*
 import java.lang.Exception
+import java.util.*
 
 
 class VehicleViewModel: ViewModel() {
 
-    private var vehicleSaved:LiveData<String>? = null
-    private var vehicleDeleted:LiveData<String>? = null
-    private var vehicleSearched:LiveData<Vehicle?>? = null
     private var message:MutableLiveData<String>? = null
     private lateinit var vehicleService: VehicleApplicationService
 
@@ -21,26 +23,6 @@ class VehicleViewModel: ViewModel() {
         this.vehicleService = vehicleService
     }
 
-    fun observeSaveVehicle() : LiveData<String> {
-        if (vehicleSaved == null){
-            vehicleSaved = MutableLiveData()
-        }
-        return vehicleSaved!!
-    }
-
-    fun observeDeleteVehicle() : LiveData<String> {
-        if(vehicleDeleted == null) {
-            vehicleDeleted = MutableLiveData()
-        }
-        return vehicleDeleted!!
-    }
-
-    fun observeSearchVehicle() : LiveData<Vehicle?>{
-        if (vehicleSearched == null){
-            vehicleSearched = MutableLiveData()
-        }
-        return vehicleSearched!!
-    }
 
     fun observeInfoMessage() : LiveData<String> {
         if (message == null){

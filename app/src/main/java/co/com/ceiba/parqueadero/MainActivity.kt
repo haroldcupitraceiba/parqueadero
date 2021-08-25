@@ -20,6 +20,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding : ActivityMainBinding
     private lateinit var vehicleViewModel: VehicleViewModel
     private var vehicleSearched: Vehicle? = null
+    private var typeVehicleChecked = VehicleApplicationFactory.Companion.TypeVehicle.CAR
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,25 +39,22 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initExitLayout(){
+        binding.exitVehicle.radioCarExit.isChecked = true
+        typeVehicleChecked = VehicleApplicationFactory.Companion.TypeVehicle.CAR
+
         binding.exitVehicle.searchButton.setOnClickListener {
-            try {
-                var vehicle:Vehicle
-                var vehicleApplicationService: VehicleApplicationService?
-                val licensePlate = binding.exitVehicle.exitLicensePlate.text.toString()
+            val licensePlate = binding.exitVehicle.exitLicensePlate.text.toString()
+            val defaultCylinderCapacity = 100
+            val vehicleApplication = VehicleApplicationFactory(
+                licensePlate = licensePlate,
+                cylinderCapacity = defaultCylinderCapacity,
+                context = this,
+                typeVehicle = typeVehicleChecked
+            ).getVehicle()
 
-                if(binding.exitVehicle.radioCarExit.isChecked){
-                    vehicle = Car(licensePlate, Date())
-                    vehicleApplicationService =
-                        VehicleApplicationFactory(vehicle, this, VehicleApplicationFactory.CAR_TYPE).getVehicle()
-                }else{
-                    val cylinderCapacity = 100
-                    vehicle = Motorcycle(licensePlate,Date(),cylinderCapacity)
-                    vehicleApplicationService =
-                        VehicleApplicationFactory(vehicle, this, VehicleApplicationFactory.MOTORCYCLE_TYPE).getVehicle()
-                }
-
-                if (vehicleApplicationService != null){
-                    vehicleViewModel.setVehicleService(vehicleApplicationService)
+            vehicleApplication?.let { vehicleApplication ->
+                vehicleApplication.service?.let {
+                    vehicleViewModel.setVehicleService(vehicleApplication.service)
                     vehicleViewModel.executeSearchVehicle().observe(this,{
                         if (it != null){
                             vehicleSearched = it.vehicle
@@ -67,11 +65,12 @@ class MainActivity : AppCompatActivity() {
                         }
                     })
                 }
-            }catch (ex: Exception){
-                showMessage(ex.message.toString())
-                binding.exitVehicle.exitLicensePlate.setText("")
-                binding.exitVehicle.paymentValue.setText("$0")
-                vehicleSearched = null
+                vehicleApplication.exceptionMessage?.let {
+                    showMessage(it)
+                    binding.exitVehicle.exitLicensePlate.setText("")
+                    binding.exitVehicle.paymentValue.setText("$0")
+                    vehicleSearched = null
+                }
             }
         }
 
@@ -80,61 +79,68 @@ class MainActivity : AppCompatActivity() {
             if (vehicleSearched == null)
                 return@setOnClickListener
 
-            var vehicleApplicationService = if(binding.exitVehicle.radioCarExit.isChecked){
-                VehicleApplicationFactory(vehicleSearched!!, this, VehicleApplicationFactory.CAR_TYPE).getVehicle()
-            }else{
-                VehicleApplicationFactory(vehicleSearched!!, this, VehicleApplicationFactory.MOTORCYCLE_TYPE).getVehicle()
-            }
+            val vehicleApplication = VehicleApplicationFactory(
+                licensePlate = vehicleSearched!!.licensePlate,
+                cylinderCapacity = vehicleSearched!!.cylinderCapacity,
+                context = this,
+                typeVehicle = typeVehicleChecked
+            ).getVehicle()
 
-            vehicleApplicationService?.let {vehicleApplicationService ->
-                vehicleViewModel.setVehicleService(vehicleApplicationService)
+            vehicleApplication?.let {vehicleApplication ->
+                vehicleApplication.service?.let {
+                    vehicleViewModel.setVehicleService(vehicleApplication.service)
+                    vehicleViewModel.executeDeleteVehicle().observe(this,{ message ->
+                        it?.let {
+                            showMessage(message)
+                        }
+                    })
+                    showMenuOptions()
+                }
 
-                vehicleViewModel.executeDeleteVehicle().observe(this,{ message ->
-                    it?.let {
-                        showMessage(message)
-                    }
-                })
-
-                showMenuOptions()
+                vehicleApplication.exceptionMessage?.let { showMessage(it) }
             }
         }
 
         binding.exitVehicle.cancelButton.setOnClickListener {
             showMenuOptions()
         }
+
+        binding.exitVehicle.radioCarExit.setOnClickListener {
+            if (binding.exitVehicle.radioCarExit.isChecked){
+                typeVehicleChecked = VehicleApplicationFactory.Companion.TypeVehicle.CAR
+            }
+        }
+
+        binding.exitVehicle.radioMotorcycleExit.setOnClickListener {
+            if (binding.exitVehicle.radioMotorcycleExit.isChecked){
+                typeVehicleChecked = VehicleApplicationFactory.Companion.TypeVehicle.MOTORCYCLE
+            }
+        }
     }
 
     private fun initEntryLayout(){
+        binding.entryVehicle.radioCarEntry.isChecked = true
+        typeVehicleChecked = VehicleApplicationFactory.Companion.TypeVehicle.CAR
         hideCylinderCapacity()
 
         binding.entryVehicle.entryButton.setOnClickListener {
 
-            var vehicle:Vehicle
-            var vehicleApplicationService: VehicleApplicationService?
             val licensePlate = binding.entryVehicle.entryLicensePlate.text.toString()
+            val cylinderCapacity = if(!binding.entryVehicle.cylinderCapacityEntry.text.toString().isNullOrEmpty())
+                    binding.entryVehicle.cylinderCapacityEntry.text.toString().toInt()
+                else 0
 
-            if(binding.entryVehicle.radioCarEntry.isChecked){
-                vehicle = Car(licensePlate, Date())
-                vehicleApplicationService =
-                    VehicleApplicationFactory(vehicle, this, VehicleApplicationFactory.CAR_TYPE).getVehicle()
-            }else{
-                val cylinderCapacity = if(!binding.entryVehicle.cylinderCapacityEntry.text.toString().isNullOrEmpty())
-                        binding.entryVehicle.cylinderCapacityEntry.text.toString().toInt()
-                    else 0
+            val vehicleApplication = VehicleApplicationFactory(licensePlate, cylinderCapacity, this, typeVehicleChecked).getVehicle()
 
-                vehicle = Motorcycle(licensePlate,Date(),cylinderCapacity)
-                vehicleApplicationService =
-                    VehicleApplicationFactory(vehicle, this, VehicleApplicationFactory.MOTORCYCLE_TYPE).getVehicle()
-            }
-
-            vehicleApplicationService?.let {
-                vehicleViewModel.setVehicleService(vehicleApplicationService)
-
-                vehicleViewModel.executeSaveVehicle().observe(this,{
-                    showMessage(it)
-                })
-
-                showMenuOptions()
+            vehicleApplication?.let { vehicleApplication ->
+                vehicleApplication.service?.let {
+                    vehicleViewModel.setVehicleService(vehicleApplication.service)
+                    vehicleViewModel.executeSaveVehicle().observe(this,{
+                        showMessage(it)
+                    })
+                    showMenuOptions()
+                }
+                vehicleApplication.exceptionMessage?.let { showMessage(it) }
             }
         }
 
@@ -145,6 +151,7 @@ class MainActivity : AppCompatActivity() {
         binding.entryVehicle.radioCarEntry.setOnClickListener {
             binding.entryVehicle.cylinderCapacityEntry.setText("")
             if (binding.entryVehicle.radioCarEntry.isChecked){
+                typeVehicleChecked = VehicleApplicationFactory.Companion.TypeVehicle.CAR
                 hideCylinderCapacity()
             }else{
                 showCylinderCapacity()
@@ -154,6 +161,7 @@ class MainActivity : AppCompatActivity() {
         binding.entryVehicle.radioMotorcycleEntry.setOnClickListener {
             binding.entryVehicle.cylinderCapacityEntry.setText("")
             if (binding.entryVehicle.radioMotorcycleEntry.isChecked){
+                typeVehicleChecked = VehicleApplicationFactory.Companion.TypeVehicle.MOTORCYCLE
                 showCylinderCapacity()
             }else{
                 hideCylinderCapacity()
