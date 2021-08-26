@@ -8,6 +8,10 @@ class Payment(
 ) {
     private val initRangeHoursDay = 9
     private val endRangeHoursDay = 24
+    private val notDaysInParking = 0
+    private val millisecondsInOneSecond = 1000
+    private val secondsInOneMinute = 60
+    private val minutesInOneHour = 60
 
     init {
         validParkingValues()
@@ -36,7 +40,7 @@ class Payment(
         var daysToPay : Long = 0
         var totalValue : Long = 0
 
-        if (parkingHours / endRangeHoursDay > 0){
+        if (parkingHours / endRangeHoursDay > notDaysInParking){
             daysToPay = parkingHours / endRangeHoursDay
             parkingHours %= endRangeHoursDay
         }
@@ -59,9 +63,9 @@ class Payment(
 
     private fun getParkingHours(): Long {
         var diff = Date().time - vehicle.entryDate!!.time
-        var minutesDiff = (diff / (60 * 1000))
-        var parkingHours = if(minutesDiff <= 60){ 1 } else{
-            (diff / ( 60 * 60 * 1000))
+        var minutesDiff = (diff / (secondsInOneMinute * millisecondsInOneSecond))
+        var parkingHours = if(minutesDiff <= minutesInOneHour){ 1 } else{
+            (diff / ( minutesInOneHour * secondsInOneMinute * millisecondsInOneSecond))
         }
         return parkingHours
     }

@@ -7,6 +7,8 @@ import co.com.ceiba.domain.model.Car
 import co.com.ceiba.domain.model.Motorcycle
 import co.com.ceiba.domain.model.Payment
 import co.com.ceiba.parqueadero.MainActivity
+import co.com.ceiba.parqueadero.anticorruption.VehicleTranslator
+import co.com.ceiba.parqueadero.dto.VehiclePayment
 import co.com.ceiba.parqueadero.factory.VehicleApplicationFactory
 
 import kotlinx.coroutines.*
@@ -56,13 +58,17 @@ class VehicleViewModel: ViewModel() {
         }
     }
 
-    fun executeSearchVehicle() : LiveData<Payment?>{
+    fun executeSearchVehicle() : LiveData<VehiclePayment?>{
         return liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
-            var payment: Payment?
-            try {
-                payment = vehicleService.getPaymentVehicle()
-                emit(payment)
+            var vehiclePayment: VehiclePayment? = null
 
+            try {
+                val payment = vehicleService.getPaymentVehicle()
+
+                payment?.let {
+                    vehiclePayment = VehicleTranslator().fromPaymentToVehiclePayment(it)
+                }
+                emit(vehiclePayment)
             }catch (ex: Exception){
                 ex.printStackTrace()
                 emit(null)

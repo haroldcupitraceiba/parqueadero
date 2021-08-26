@@ -9,6 +9,7 @@ import co.com.ceiba.domain.model.Car
 import co.com.ceiba.domain.model.Motorcycle
 import co.com.ceiba.domain.model.Vehicle
 import co.com.ceiba.parqueadero.databinding.ActivityMainBinding
+import co.com.ceiba.parqueadero.dto.VehiclePayment
 import co.com.ceiba.parqueadero.factory.VehicleApplicationFactory
 import co.com.ceiba.parqueadero.viewmodel.VehicleViewModel
 import java.lang.Exception
@@ -19,7 +20,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding : ActivityMainBinding
     private lateinit var vehicleViewModel: VehicleViewModel
-    private var vehicleSearched: Vehicle? = null
+    private var vehicleSearched: VehiclePayment? = null
     private var typeVehicleChecked = VehicleApplicationFactory.Companion.TypeVehicle.CAR
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,8 +58,8 @@ class MainActivity : AppCompatActivity() {
                     vehicleViewModel.setVehicleService(vehicleApplication.service)
                     vehicleViewModel.executeSearchVehicle().observe(this,{
                         if (it != null){
-                            vehicleSearched = it.vehicle
-                            binding.exitVehicle.paymentValue.setText("$"+it.calculatePayment().toString())
+                            vehicleSearched = it
+                            binding.exitVehicle.paymentValue.setText("$"+vehicleSearched!!.paymentValue.toString())
                         }else{
                             showMessage(getString(R.string.vehicle_not_found))
                             vehicleSearched = null
