@@ -14,34 +14,15 @@ pipeline {
   tools {
     jdk 'JDK8_Mac' //Verisión preinstalada en la Configuración del Master
   }
-/*	Versiones disponibles
-      JDK8_Mac
-      JDK6_Centos
-      JDK7_Centos
-      JDK8_Centos
-      JDK10_Centos
-      JDK11_Centos
-      JDK13_Centos
-      JDK14_Centos
-*/
 
   //Aquí comienzan los “items” del Pipeline
   stages{
-    stage('Checkout') {
-      steps{
-        echo "------------>Checkout<------------"
-        checkout([
-          $class: 'GitSCM', 
-          branches: [[name: '*/main']], 
-          doGenerateSubmoduleConfigurations: false, 
-          extensions: [], 
-          gitTool: 'Default', 
-          submoduleCfg: [], 
-          userRemoteConfigs: [[
-            credentialsId: 'Github_haroldcupitraceiba', 
-            url:'https://github.com/haroldcupitraceiba/parqueadero'
-          ]]
-        ])
+
+    stage('Build') {
+      steps {
+        echo "------------>Build<------------"
+        //Construir sin tarea test que se ejecutó previamente
+        sh './gradlew --b ./build.gradle build -x test'
       }
     }
     
@@ -70,13 +51,6 @@ pipeline {
       }
     }
 
-    stage('Build') {
-      steps {
-        echo "------------>Build<------------"
-        //Construir sin tarea test que se ejecutó previamente
-        sh './gradlew --b ./build.gradle build -x test'
-      }
-    }  
   }
 
   post {
