@@ -53,7 +53,7 @@ pipeline {
         sh './gradlew jacocoTestReport'
 
         script {
-            def testResults = findFiles(glob: 'app/build/reports/jacoco/jacocoTestReport/*.xml')
+            def testResults = findFiles(glob: 'domain/build/reports/jacoco/jacocoTestReport/*.xml')
             for(xml in testResults) {
                 touch xml.getPath()
             }
