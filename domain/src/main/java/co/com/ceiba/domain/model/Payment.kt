@@ -4,7 +4,7 @@ import co.com.ceiba.domain.exception.ParkingValueNotValidException
 import java.util.*
 
 class Payment(
-    val vehicle: Vehicle
+    private val vehicle: Vehicle
 ) {
     private val initRangeHoursDay = 9
     private val endRangeHoursDay = 24

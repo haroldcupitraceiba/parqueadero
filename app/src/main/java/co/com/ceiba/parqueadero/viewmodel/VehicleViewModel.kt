@@ -3,8 +3,7 @@ package co.com.ceiba.parqueadero.viewmodel
 import android.content.Context
 import androidx.lifecycle.*
 import co.com.ceiba.application.VehicleApplicationService
-import co.com.ceiba.parqueadero.anticorruption.VehicleTranslator
-import co.com.ceiba.parqueadero.dto.VehiclePayment
+import co.com.ceiba.application.dto.VehiclePayment
 
 import kotlinx.coroutines.*
 import java.lang.Exception
@@ -38,7 +37,7 @@ class VehicleViewModel: ViewModel() {
         }
     }
 
-    fun executeSaveVehicle() :LiveData<String> {
+    fun executeSaveVehicle() : LiveData<String> {
 
         return liveData(Dispatchers.IO) {
             try {
@@ -53,14 +52,9 @@ class VehicleViewModel: ViewModel() {
 
     fun executeSearchVehicle() : LiveData<VehiclePayment?>{
         return liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
-            var vehiclePayment: VehiclePayment? = null
-
             try {
-                val payment = vehicleService.getPaymentVehicle()
+                val vehiclePayment = vehicleService.getPaymentVehicle()
 
-                payment?.let {
-                    vehiclePayment = VehicleTranslator().fromPaymentToVehiclePayment(it)
-                }
                 emit(vehiclePayment)
             }catch (ex: Exception){
                 ex.printStackTrace()

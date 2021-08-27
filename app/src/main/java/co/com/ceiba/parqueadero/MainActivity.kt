@@ -4,8 +4,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
+import co.com.ceiba.application.dto.VehiclePayment
 import co.com.ceiba.parqueadero.databinding.ActivityMainBinding
-import co.com.ceiba.parqueadero.dto.VehiclePayment
 import co.com.ceiba.parqueadero.viewmodel.VehicleViewModel
 import java.util.*
 
@@ -15,7 +15,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding : ActivityMainBinding
     private lateinit var vehicleViewModel: VehicleViewModel
     private var vehicleSearched: VehiclePayment? = null
-    private var typeVehicleChecked = "CAR"
+    private val vehicleTypeCar = "CAR"
+    private val vehicleTypeMotorcycle = "MOTORCYCLE"
+    private var typeVehicleChecked = vehicleTypeCar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,7 +37,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun initExitLayout(){
         binding.exitVehicle.radioCarExit.isChecked = true
-        typeVehicleChecked = "CAR"
+        typeVehicleChecked = vehicleTypeCar
 
         binding.exitVehicle.searchButton.setOnClickListener {
             val licensePlate = binding.exitVehicle.exitLicensePlate.text.toString()
@@ -44,19 +46,10 @@ class MainActivity : AppCompatActivity() {
 
             if (exceptionMessage == null){
                 vehicleViewModel.executeSearchVehicle().observe(this,{
-                    if (it != null){
-                        vehicleSearched = it
-                        binding.exitVehicle.paymentValue.setText("$"+vehicleSearched!!.paymentValue.toString())
-                    }else{
-                        showMessage(getString(R.string.vehicle_not_found))
-                        vehicleSearched = null
-                    }
+                    showPaymentValue(it)
                 })
             }else{
-                showMessage(exceptionMessage!!)
-                binding.exitVehicle.exitLicensePlate.setText("")
-                binding.exitVehicle.paymentValue.setText("$0")
-                vehicleSearched = null
+                initVehicleSearched(exceptionMessage)
             }
         }
 
@@ -74,9 +67,7 @@ class MainActivity : AppCompatActivity() {
 
             if (exceptionMessage == null){
                 vehicleViewModel.executeDeleteVehicle().observe(this,{ message ->
-                    it?.let {
-                        showMessage(message)
-                    }
+                    showMessage(message)
                 })
                 showMenuOptions()
             }else{
@@ -90,27 +81,45 @@ class MainActivity : AppCompatActivity() {
 
         binding.exitVehicle.radioCarExit.setOnClickListener {
             if (binding.exitVehicle.radioCarExit.isChecked){
-                typeVehicleChecked = "CAR"
+                typeVehicleChecked = vehicleTypeCar
             }
         }
 
         binding.exitVehicle.radioMotorcycleExit.setOnClickListener {
             if (binding.exitVehicle.radioMotorcycleExit.isChecked){
-                typeVehicleChecked = "MOTORCYCLE"
+                typeVehicleChecked = vehicleTypeMotorcycle
             }
+        }
+    }
+
+    private fun initVehicleSearched(exceptionMessage: String) {
+        showMessage(exceptionMessage!!)
+        binding.exitVehicle.exitLicensePlate.setText("")
+        binding.exitVehicle.paymentValue.setText("$0")
+        vehicleSearched = null
+    }
+
+    private fun showPaymentValue(vehiclePayment: VehiclePayment?) {
+        if (vehiclePayment != null){
+            vehicleSearched = vehiclePayment
+            binding.exitVehicle.paymentValue.setText("$"+vehicleSearched!!.paymentValue.toString())
+        }else{
+            showMessage(getString(R.string.vehicle_not_found))
+            vehicleSearched = null
         }
     }
 
     private fun initEntryLayout(){
         binding.entryVehicle.radioCarEntry.isChecked = true
-        typeVehicleChecked = "CAR"
+        typeVehicleChecked = vehicleTypeCar
         hideCylinderCapacity()
 
         binding.entryVehicle.entryButton.setOnClickListener {
 
             val licensePlate = binding.entryVehicle.entryLicensePlate.text.toString()
-            val cylinderCapacity = if(!binding.entryVehicle.cylinderCapacityEntry.text.toString().isNullOrEmpty())
+            val cylinderCapacity = if(!binding.entryVehicle.cylinderCapacityEntry.text.toString().isNullOrEmpty()){
                     binding.entryVehicle.cylinderCapacityEntry.text.toString().toInt()
+                }
                 else 0
 
             val exceptionMessage = vehicleViewModel.setDataToCreateService(licensePlate, cylinderCapacity, this, typeVehicleChecked)
@@ -132,7 +141,7 @@ class MainActivity : AppCompatActivity() {
         binding.entryVehicle.radioCarEntry.setOnClickListener {
             binding.entryVehicle.cylinderCapacityEntry.setText("")
             if (binding.entryVehicle.radioCarEntry.isChecked){
-                typeVehicleChecked = "CAR"
+                typeVehicleChecked = vehicleTypeCar
                 hideCylinderCapacity()
             }else{
                 showCylinderCapacity()
@@ -142,7 +151,7 @@ class MainActivity : AppCompatActivity() {
         binding.entryVehicle.radioMotorcycleEntry.setOnClickListener {
             binding.entryVehicle.cylinderCapacityEntry.setText("")
             if (binding.entryVehicle.radioMotorcycleEntry.isChecked){
-                typeVehicleChecked = "MOTORCYCLE"
+                typeVehicleChecked = vehicleTypeMotorcycle
                 showCylinderCapacity()
             }else{
                 hideCylinderCapacity()

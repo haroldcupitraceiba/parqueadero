@@ -1,6 +1,8 @@
 package co.com.ceiba.application
 
 import android.content.Context
+import co.com.ceiba.application.anticorruption.ApplicationTranslator
+import co.com.ceiba.application.dto.VehiclePayment
 import co.com.ceiba.dataaccess.repository.CarRepositoryImpl
 import co.com.ceiba.dataaccess.repository.MotorcycleRepositoryImpl
 import co.com.ceiba.dataaccess.repository.VehicleRepositoryImpl
@@ -54,8 +56,16 @@ class VehicleApplicationService(){
         entryService.saveVehicle()
     }
 
-    fun getPaymentVehicle(): Payment? {
-        return entryService.getPayment()
+    fun getPaymentVehicle(): VehiclePayment? {
+
+        var vehiclePayment : VehiclePayment? = null
+        val payment = entryService.getPayment()
+
+        payment?.let {
+            vehiclePayment = ApplicationTranslator().fromPaymentToVehiclePayment(it)
+        }
+
+        return vehiclePayment
     }
 
     fun deleteVehicle(){
