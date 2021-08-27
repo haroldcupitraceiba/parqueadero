@@ -3,28 +3,21 @@ package co.com.ceiba.parqueadero.viewmodel
 import android.content.Context
 import androidx.lifecycle.*
 import co.com.ceiba.application.VehicleApplicationService
-import co.com.ceiba.domain.model.Car
-import co.com.ceiba.domain.model.Motorcycle
-import co.com.ceiba.domain.model.Payment
-import co.com.ceiba.parqueadero.MainActivity
 import co.com.ceiba.parqueadero.anticorruption.VehicleTranslator
 import co.com.ceiba.parqueadero.dto.VehiclePayment
-import co.com.ceiba.parqueadero.factory.VehicleApplicationFactory
 
 import kotlinx.coroutines.*
 import java.lang.Exception
-import java.util.*
 
 
 class VehicleViewModel: ViewModel() {
 
     private var message:MutableLiveData<String>? = null
-    private lateinit var vehicleService: VehicleApplicationService
+    private val vehicleService = VehicleApplicationService()
 
-    fun setVehicleService(vehicleService: VehicleApplicationService){
-        this.vehicleService = vehicleService
+    fun setDataToCreateService(licensePlate: String, cylinderCapacity: Int, context: Context, typeVehicle: String): String?{
+        return vehicleService.createService(licensePlate,cylinderCapacity, context, typeVehicle)
     }
-
 
     fun observeInfoMessage() : LiveData<String> {
         if (message == null){
