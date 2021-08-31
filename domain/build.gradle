@@ -1,5 +1,5 @@
 plugins {
-    id 'com.android.library'
+    id 'com.android.application'
     id 'kotlin-kapt'
     id 'kotlin-android'
     id 'jacoco'
@@ -42,7 +42,7 @@ android {
     }
     tasks.withType(Test){
         jacoco.includeNoLocationClasses = true
-        finalizedBy jacocoTestReport
+        jacoco.excludes = ['jdk.internal.*']
     }
 }
 
